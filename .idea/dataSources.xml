@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3980251814">
+    <data-source source="LOCAL" name="Derby (Embedded) - jdbc:derby:;create=true" uuid="ee431696-c1d9-48ca-8642-e4a37dedb80e">
+      <driver-ref>derby.embedded</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.apache.derby.jdbc.EmbeddedDriver</jdbc-driver>
+      <jdbc-url>jdbc:derby:;create=true</jdbc-url>
+    </data-source>
+  </component>
+</project>
