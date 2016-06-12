@@ -1,5 +1,6 @@
 package main.repository;
 
+import main.database.DriverDataMapper;
 import main.logic.Driver;
 
 /**
@@ -12,5 +13,13 @@ public class DriverRepository extends Repository<Driver> {
         list.stream()
                 .filter(entry -> entry.getId() == item.getId())
                 .forEach(entry -> entry.register(item.getRegData()));
+    }
+
+    public DriverRepository(DriverDataMapper dataMapper){
+        super(dataMapper);
+    }
+
+    public DriverRepository(){
+        super(null);
     }
 }

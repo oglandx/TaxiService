@@ -1,5 +1,7 @@
 package main.repository;
 
+import main.database.AbstractDataMapper;
+import main.database.PassengerDataMapper;
 import main.logic.Passenger;
 
 /**
@@ -11,5 +13,13 @@ public class PassengerRepository extends Repository<Passenger>{
         list.stream()
                 .filter(entry -> entry.getId() == item.getId())
                 .forEach(entry -> entry.register(item.getRegData()));
+    }
+
+    public PassengerRepository(PassengerDataMapper dataMapper){
+        super(dataMapper);
+    }
+
+    public PassengerRepository(){
+        super(null);
     }
 }

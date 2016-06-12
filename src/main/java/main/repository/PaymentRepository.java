@@ -1,5 +1,6 @@
 package main.repository;
 
+import main.database.PaymentDataMapper;
 import main.logic.Payment;
 
 /**
@@ -15,5 +16,13 @@ public class PaymentRepository extends Repository<Payment> {
                     entry.setDistance(item.getDistance());
                     entry.setWaitMin(item.getWaitMin());
                 });
+    }
+
+    public PaymentRepository(PaymentDataMapper dataMapper){
+        super(dataMapper);
+    }
+
+    public PaymentRepository(){
+        super(null);
     }
 }

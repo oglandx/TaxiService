@@ -1,5 +1,6 @@
 package main.repository;
 
+import main.database.OrderDataMapper;
 import main.logic.Order;
 
 /**
@@ -15,5 +16,13 @@ public class OrderRepository extends Repository<Order> {
                     entry.bindDriver(item.getDriver());
                     entry.assignPassenger(item.getPassenger());
                 });
+    }
+
+    public OrderRepository(OrderDataMapper dataMapper){
+        super(dataMapper);
+    }
+
+    public OrderRepository(){
+        super(null);
     }
 }

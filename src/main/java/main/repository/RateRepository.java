@@ -1,5 +1,6 @@
 package main.repository;
 
+import main.database.RateDataMapper;
 import main.logic.Rate;
 
 /**
@@ -16,5 +17,13 @@ public class RateRepository extends Repository<Rate> {
                     entry.setCostPerMin(item.getCostPerMin());
                     entry.setFreeMinutes(item.getFreeMinutes());
                 });
+    }
+
+    public RateRepository(RateDataMapper dataMapper){
+        super(dataMapper);
+    }
+
+    public RateRepository(){
+        super(null);
     }
 }
