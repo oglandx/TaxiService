@@ -119,4 +119,24 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
         return result;
     }
 
+    public void updateDb(T item) throws DatabaseException {
+        if (getDataMapper() != null) {
+            try {
+                getDataMapper().update(item);
+            } catch (SQLException e) {
+                throw new DatabaseException(e);
+            }
+        }
+    }
+
+    public void closeDataMapperConnection() throws DatabaseException {
+        if (dataMapper != null) {
+            try {
+                dataMapper.closeConnection();
+            }
+            catch (SQLException e){
+                throw new DatabaseException(e);
+            }
+        }
+    }
 }

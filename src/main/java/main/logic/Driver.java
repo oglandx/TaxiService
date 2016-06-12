@@ -21,6 +21,10 @@ public class Driver extends UserWithKarma implements AbstractDriver {
         setKarma(karma);
     }
 
+    public Driver(RegisterData regData){
+        register(regData);
+    }
+
     @Override
     public void selectOrder(Order order) {
         if(this.setStatus(DriverStatus.BUSY)) {

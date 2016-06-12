@@ -2,6 +2,7 @@ package main.repository;
 
 import main.database.DriverDataMapper;
 import main.logic.Driver;
+import main.repository.exceptions.DatabaseException;
 
 /**
  * Created by oglandx on 5/23/16.
@@ -9,7 +10,8 @@ import main.logic.Driver;
 public class DriverRepository extends Repository<Driver> {
 
     @Override
-    public void update(Driver item) {
+    public void update(Driver item) throws DatabaseException {
+        updateDb(item);
         list.stream()
                 .filter(entry -> entry.getId() == item.getId())
                 .forEach(entry -> entry.register(item.getRegData()));

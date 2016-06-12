@@ -49,6 +49,10 @@ public class Operator extends User implements AbstractOperator {
         register(regData);
     }
 
+    public Operator(RegisterData regData){
+        register(regData);
+    }
+
     public List<Driver> getFreeDrivers(){
         Query q = new Query("{'status': '" + DriverStatus.FREE.getId() + "'}");
         List<Driver> drivers;

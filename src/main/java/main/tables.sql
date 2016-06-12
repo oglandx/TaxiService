@@ -73,3 +73,5 @@ ALTER TABLE "Order" ADD CONSTRAINT FKOrder473824 FOREIGN KEY (driver_id) REFEREN
 ALTER TABLE rate ADD COLUMN freeminutes INT4;
 
 ALTER TABLE payment RENAME COLUMN drivekm to distance;
+
+ALTER TABLE driver ADD COLUMN "status" VARCHAR(100);

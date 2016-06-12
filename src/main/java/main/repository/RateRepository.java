@@ -2,6 +2,9 @@ package main.repository;
 
 import main.database.RateDataMapper;
 import main.logic.Rate;
+import main.repository.exceptions.DatabaseException;
+
+import java.sql.SQLException;
 
 /**
  * Created by oglandx on 6/6/16.
@@ -9,7 +12,8 @@ import main.logic.Rate;
 public class RateRepository extends Repository<Rate> {
 
     @Override
-    public void update(Rate item) {
+    public void update(Rate item) throws DatabaseException {
+        updateDb(item);
         list.stream()
                 .filter(entry -> entry.getId() == item.getId())
                 .forEach(entry -> {

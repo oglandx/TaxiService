@@ -51,4 +51,8 @@ public class RegisterData extends AuthData {
         this.middleName = middleName;
         this.birthDate = birthDate;
     }
+
+    public AuthData getAuthData(){
+        return new AuthData(getEmail(), getPassHash());
+    }
 }

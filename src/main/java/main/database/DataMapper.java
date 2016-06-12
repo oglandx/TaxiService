@@ -1,6 +1,7 @@
 package main.database;
 
 import main.database.exceptions.SQLMultipleObjectsException;
+import main.database.exceptions.SQLObjectNotFoundException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,6 +24,9 @@ public abstract class DataMapper<T> implements AbstractDataMapper<T> {
     }
 
     T single(ResultSet resultSet) throws SQLException {
+        if(!resultSet.next()) {
+            throw new SQLObjectNotFoundException();
+        }
         T user = current(resultSet);
         if(resultSet.next()){
             throw new SQLMultipleObjectsException();

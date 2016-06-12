@@ -43,8 +43,8 @@ public class OperatorDataMapper extends UserDataMapper<Operator> {
     @Override
     public void insert(Operator item) throws SQLException {
         String sql =
-                "INSERT INTO \"User\" (lastname, firstname, middlename, birthdate, email, pass, karma)"  +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?); ";
+                "INSERT INTO \"User\" (lastname, firstname, middlename, birthdate, email, pass)"  +
+                        "VALUES (?, ?, ?, ?, ?, ?); ";
         PreparedStatement prepared = connection.prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
