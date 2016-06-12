@@ -41,7 +41,7 @@ public class OperatorFacade {
 
     public boolean registerNew(RegisterData regData) throws ApplicationError {
         String existenceQuery = "{'email': '" + regData.getEmail() + "'}";
-        if(check(new Query(existenceQuery))) {
+        if(Util.checkQuery(repository, new Query(existenceQuery))) {
             return false;
         }
 
@@ -62,25 +62,11 @@ public class OperatorFacade {
 
     public boolean auth(AuthData authData) throws ApplicationError {
         String query = "{'email': '" + authData.getEmail() + "', 'pass': '" + authData.getPassHash() + "'}";
-        return check(new Query(query));
+        return Util.checkQuery(repository, new Query(query));
     }
 
     public boolean auth(Operator operator) throws ApplicationError {
         return auth(operator.getRegData().getAuthData());
-    }
-
-    private boolean check(Query query) throws ApplicationError {
-        try {
-            repository.get(query);
-        }
-        catch (MultipleObjectsException | DatabaseException e){
-            e.printStackTrace();
-            throw new ApplicationError(e);
-        }
-        catch (ObjectNotFoundException e){
-            return false;
-        }
-        return true;
     }
 
     public boolean closeConnection() {
