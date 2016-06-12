@@ -15,7 +15,7 @@ import java.sql.SQLException;
 /**
  * Created by oglandx on 6/12/16.
  */
-public class OperatorFacade {
+public class OperatorFacade implements UserFacade<Operator> {
     private static OperatorRepository repository = null;
     private static OperatorFacade instance = null;
 
@@ -39,6 +39,7 @@ public class OperatorFacade {
         return instance;
     }
 
+    @Override
     public boolean registerNew(RegisterData regData) throws ApplicationError {
         String existenceQuery = "{'email': '" + regData.getEmail() + "'}";
         if(Util.checkQuery(repository, new Query(existenceQuery))) {
@@ -56,19 +57,23 @@ public class OperatorFacade {
         return true;
     }
 
+    @Override
     public boolean registerNew(Operator operator) throws ApplicationError {
         return registerNew(operator.getRegData());
     }
 
+    @Override
     public boolean auth(AuthData authData) throws ApplicationError {
         String query = "{'email': '" + authData.getEmail() + "', 'pass': '" + authData.getPassHash() + "'}";
         return Util.checkQuery(repository, new Query(query));
     }
 
+    @Override
     public boolean auth(Operator operator) throws ApplicationError {
         return auth(operator.getRegData().getAuthData());
     }
 
+    @Override
     public boolean closeConnection() {
         try {
             repository.closeDataMapperConnection();

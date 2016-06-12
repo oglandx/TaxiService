@@ -15,7 +15,7 @@ import java.sql.SQLException;
 /**
  * Created by oglandx on 6/12/16.
  */
-public class PassengerFacade {
+public class PassengerFacade implements UserFacade<Passenger> {
     private static PassengerRepository repository = null;
     private static PassengerFacade instance = null;
 
@@ -39,6 +39,7 @@ public class PassengerFacade {
         return instance;
     }
 
+    @Override
     public boolean registerNew(RegisterData regData) throws ApplicationError {
         String existenceQuery = "{'email': '" + regData.getEmail() + "'}";
         if(Util.checkQuery(repository, new Query(existenceQuery))) {
@@ -56,19 +57,23 @@ public class PassengerFacade {
         return true;
     }
 
+    @Override
     public boolean registerNew(Passenger passenger) throws ApplicationError {
         return registerNew(passenger.getRegData());
     }
 
+    @Override
     public boolean auth(AuthData authData) throws ApplicationError {
         String query = "{'email': '" + authData.getEmail() + "', 'pass': '" + authData.getPassHash() + "'}";
         return Util.checkQuery(repository, new Query(query));
     }
 
+    @Override
     public boolean auth(Passenger passenger) throws ApplicationError {
         return auth(passenger.getRegData().getAuthData());
     }
 
+    @Override
     public boolean closeConnection() {
         try {
             repository.closeDataMapperConnection();
@@ -79,6 +84,5 @@ public class PassengerFacade {
         }
         return true;
     }
-
 
 }

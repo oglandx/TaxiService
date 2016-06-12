@@ -15,7 +15,7 @@ import java.sql.SQLException;
 /**
  * Created by oglandx on 6/12/16.
  */
-public class DriverFacade  {
+public class DriverFacade implements UserFacade<Driver> {
     private static DriverRepository repository = null;
     private static DriverFacade instance = null;
 
@@ -39,6 +39,7 @@ public class DriverFacade  {
         return instance;
     }
 
+    @Override
     public boolean registerNew(RegisterData regData) throws ApplicationError {
         String existenceQuery = "{'email': '" + regData.getEmail() + "'}";
         if(Util.checkQuery(repository, new Query(existenceQuery))) {
@@ -56,19 +57,23 @@ public class DriverFacade  {
         return true;
     }
 
-    public boolean registerNew(Driver passenger) throws ApplicationError {
-        return registerNew(passenger.getRegData());
+    @Override
+    public boolean registerNew(Driver driver) throws ApplicationError {
+        return registerNew(driver.getRegData());
     }
 
+    @Override
     public boolean auth(AuthData authData) throws ApplicationError {
         String query = "{'email': '" + authData.getEmail() + "', 'pass': '" + authData.getPassHash() + "'}";
         return Util.checkQuery(repository, new Query(query));
     }
 
+    @Override
     public boolean auth(Driver driver) throws ApplicationError {
         return auth(driver.getRegData().getAuthData());
     }
 
+    @Override
     public boolean closeConnection() {
         try {
             repository.closeDataMapperConnection();
