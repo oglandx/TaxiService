@@ -133,4 +133,28 @@ public class OperatorFacade implements UserFacade<Operator> {
         }
         return drivers;
     }
+
+    public Driver findBestDriver(Operator operator, Order order, List<Driver> freeDrivers,
+                                 ChooseDriverStrategy strategy) throws ApplicationError {
+        Driver result = operator.findBestDriver(freeDrivers, order, strategy);
+        try {
+            driverRepository.update(result);
+        }
+        catch (DatabaseException e){
+            throw new ApplicationError(e);
+        }
+        return result;
+    }
+
+    public boolean attachOrder(Operator operator, Order order) throws ApplicationError {
+        if (operator.attachOrder(order)) {
+            try {
+                orderRepository.update(order);
+            } catch (DatabaseException e) {
+                throw new ApplicationError(e);
+            }
+            return true;
+        }
+        return false;
+    }
 }

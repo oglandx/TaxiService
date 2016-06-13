@@ -52,16 +52,4 @@ public class Operator extends User implements AbstractOperator {
     public Operator(RegisterData regData){
         register(regData);
     }
-
-    public List<Driver> getFreeDrivers(){
-        Query q = new Query("{'status': '" + DriverStatus.FREE.getId() + "'}");
-        List<Driver> drivers;
-        try {
-            drivers = new DriverDataMapper().filter(q);
-        }
-        catch (SQLException e){
-            return null;
-        }
-        return drivers;
-    }
 }
