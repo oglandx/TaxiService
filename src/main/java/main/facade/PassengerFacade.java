@@ -137,7 +137,13 @@ public class PassengerFacade implements UserFacade<Passenger> {
     }
 
     public List<Order> getOrderList(Passenger passenger, OrderStatus status) throws ApplicationError {
-        String query = "{'passenger_id': '" + passenger.getId() + "', 'status': '" + status.getId() + "'}";
+        String query;
+        if (status == null) {
+            query = "{'passenger_id': '" + passenger.getId() + "'}";
+        }
+        else {
+            query = "{'passenger_id': '" + passenger.getId() + "', 'status': '" + status.getId() + "'}";
+        }
         List<Order> orders;
         try {
             orders = orderRepository.filter(new Query(query));

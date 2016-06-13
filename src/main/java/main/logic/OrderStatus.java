@@ -31,7 +31,7 @@ public enum OrderStatus {
     private final String id;
 
     OrderStatus(final String id){
-        this.id = id;
+        this.id = id != null ? id : "NEW";
     }
 
     public String getId() {
