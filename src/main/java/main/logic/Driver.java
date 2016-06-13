@@ -13,7 +13,7 @@ public class Driver extends UserWithKarma implements AbstractDriver {
     private DriverStatus status = DriverStatus.FREE;
     private Date waitingStart = null;
     private int waitedTime = 0;
-    private ArrayList<Order> availableOrders = new ArrayList<>();
+    private Rate currentRate = null;
 
     public Driver(int id, RegisterData regData, int karma, DriverStatus status){
         setId(id);
@@ -27,22 +27,29 @@ public class Driver extends UserWithKarma implements AbstractDriver {
     }
 
     @Override
-    public void selectOrder(Order order) {
-        if(this.setStatus(DriverStatus.BUSY)) {
-            this.selectedOrder = order;
-            order.bindDriver(this);
-            order.setStatus(OrderStatus.ACCEPTED);
+    public boolean selectOrder(Order order) {
+        if(setStatus(DriverStatus.BUSY) &&
+                order.bindDriver(this) &&
+                order.setStatus(OrderStatus.ACCEPTED)) {
+            selectedOrder = order;
+            return true;
         }
         else{
-            this.declineOrder(order);
+            declineOrder(order);
+            return false;
         }
     }
 
     @Override
-    public void declineOrder(Order order) {
-        this.selectedOrder = null;
-        order.bindDriver(this);
-        order.setStatus(OrderStatus.DECLINED);
+    public boolean declineOrder(Order order) {
+        selectedOrder = null;
+        return order.getDriver().getId() == getId() &&
+                order.bindDriver(this) &&
+                order.setStatus(OrderStatus.DECLINED);
+    }
+
+    public Order getSelectedOrder(){
+        return selectedOrder;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class Driver extends UserWithKarma implements AbstractDriver {
 
     @Override
     public boolean startWaiting() {
-        if(this.waitingStart != null){
+        if (selectedOrder == null || this.waitingStart != null){
             return false;
         }
         Calendar calendar = Calendar.getInstance();
@@ -73,29 +80,40 @@ public class Driver extends UserWithKarma implements AbstractDriver {
     public int endWaiting() {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
-        this.waitedTime = (int)(currentTime.getTime() - this.waitingStart.getTime());
-        this.waitingStart = null;
-        return this.waitedTime;
+        waitedTime = (int)(currentTime.getTime() - waitingStart.getTime());
+        waitingStart = null;
+        return waitedTime;
     }
 
     @Override
-    public void leaveWaiting() {
-        this.waitingStart = null;
-        this.waitedTime = 0;
-        this.selectedOrder.setStatus(OrderStatus.DECLINED);
+    public boolean leaveWaiting() {
+        waitingStart = null;
+        waitedTime = 0;
+        return selectedOrder != null && selectedOrder.setStatus(OrderStatus.DECLINED);
     }
 
     @Override
     public Payment getPayment(int distance) {
+        if (selectedOrder == null) {
+            return null;
+        }
         Payment payment = new Payment(this.getCurrentRate());
         payment.setDistance(distance);
         payment.setWaitMin(waitedTime/60);
+        if (selectedOrder != null) {
+            selectedOrder.setPayment(payment);
+        }
         return payment;
     }
 
     @Override
     public Rate getCurrentRate() {
-        return new Rate(new BigDecimal(0), new BigDecimal(0), 0);
+        return currentRate;
+    }
+
+    @Override
+    public void setCurrentRate(Rate rate) {
+        this.currentRate = rate;
     }
 
 }
