@@ -16,5 +16,6 @@ public class Server {
         server.createContext("/taxi/order", new GetOrderHandler());
         server.setExecutor(null);
         server.start();
+        System.err.println("Server started");
     }
 }

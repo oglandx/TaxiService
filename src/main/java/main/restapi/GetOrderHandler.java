@@ -14,8 +14,6 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +25,7 @@ public class GetOrderHandler implements HttpHandler {
 
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
+            System.err.println("Start handle " + httpExchange.getRequestURI());
             Map<String, String> queries = splitQuery(httpExchange.getRequestURI());
             String role = queries.get("role");
             String response;
@@ -44,6 +43,7 @@ public class GetOrderHandler implements HttpHandler {
         }
         finally {
             httpExchange.close();
+            System.err.println("End handle" + httpExchange.getHttpContext().getPath());
         }
     }
 
@@ -74,9 +74,9 @@ public class GetOrderHandler implements HttpHandler {
             }
             else {
                 OrderStatus status = q.get("order_status") == null ? null : OrderStatus.valueOf(q.get("order_status"));
-                List<Order> passengerList = passengerFacade.getOrderList(passenger, status);
+                List<Order> orderList = passengerFacade.getOrderList(passenger, status);
                 try {
-                    result = getOrdersJson(passengerList);
+                    result = getOrdersJson(orderList);
                 }
                 catch (UnsupportedEncodingException e){
                     e.printStackTrace();

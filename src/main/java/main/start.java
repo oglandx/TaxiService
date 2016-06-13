@@ -35,12 +35,12 @@ public class start {
 //            e.printStackTrace();
 //        }
 
-//        GUIMain main = new GUIMain();
         try {
-            Server server = new Server(8000);
+            new Server(8000);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+        new GUIMain();
     }
 }
