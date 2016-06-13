@@ -1,18 +1,27 @@
 package main.database;
 
+import main.logic.DriverStatus;
 import main.logic.RegisterData;
 import main.logic.Driver;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
  * Created by oglandx on 5/30/16.
  */
-public class DriverDataMapper extends UserWithKarmaDataMapper<Driver> {
+public class DriverDataMapper extends UserDataMapper<Driver> {
 
     protected String getTableName(){
         return "driver";
+    }
+
+    public Map<String, String> getDispatcher(){
+        Map<String, String> dispatcher = new HashMap<>();
+        dispatcher.put("status", getTableName());
+        return dispatcher;
     }
 
     public DriverDataMapper() throws SQLException {
@@ -35,6 +44,60 @@ public class DriverDataMapper extends UserWithKarmaDataMapper<Driver> {
         String pass = resultSet.getString("pass");
         int karma = resultSet.getInt("karma");
 
-        return new Driver(id, new RegisterData(lastname, firstname, middlename, birthdate, email, pass), karma);
+        String sql = "SELECT status FROM \"" + getTableName() + "\" WHERE id = " + id + ";";
+        resultSet = connection.createStatement().executeQuery(sql);
+        DriverStatus status = resultSet.next() && resultSet.getObject("status") != null ?
+                DriverStatus.valueOf(resultSet.getString("status")) : DriverStatus.FREE;
+
+        return new Driver(id, new RegisterData(lastname, firstname, middlename, birthdate, email, pass), karma, status);
+    }
+
+    @Override
+    public void insert(Driver item) throws SQLException {
+        String sql =
+                "INSERT INTO \"User\" (lastname, firstname, middlename, birthdate, email, pass, karma)"  +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?); ";
+        PreparedStatement prepared = connection.prepareStatement(sql);
+        prepared.setString(1, item.getRegData().getLastName());
+        prepared.setString(2, item.getRegData().getFirstName());
+        prepared.setString(3, item.getRegData().getMiddleName());
+        prepared.setDate(4, item.getRegData().getBirthDate());
+        prepared.setString(5, item.getRegData().getEmail());
+        prepared.setString(6, item.getRegData().getPassHash());
+        prepared.setInt(7, item.getKarma());
+
+        prepared.execute();
+
+        sql =
+                "INSERT INTO \"" + getTableName() + "\"(user_id)" +
+                        "VALUES((SELECT id FROM \"User\" WHERE email = ? "  +
+                        "AND id not in (SELECT user_id FROM \"" + getTableName() + "\")), ?);";
+        prepared = connection.prepareStatement(sql);
+        prepared.setString(1, item.getRegData().getEmail());
+        prepared.setString(2, item.getStatus().getId());
+        prepared.execute();
+    }
+
+    @Override
+    public void update(Driver item) throws SQLException {
+        String sql =
+                "UPDATE \"User\" " +
+                        "SET lastname = ?, firstname = ?, middlename = ?, birthdate = ?, email = ?, pass = ?, " +
+                        "karma = ? WHERE id = ?; ";
+        PreparedStatement prepared = connection.prepareStatement(sql);
+        prepared.setString(1, item.getRegData().getLastName());
+        prepared.setString(2, item.getRegData().getFirstName());
+        prepared.setString(3, item.getRegData().getMiddleName());
+        prepared.setDate(4, item.getRegData().getBirthDate());
+        prepared.setString(5, item.getRegData().getEmail());
+        prepared.setString(6, item.getRegData().getPassHash());
+        prepared.setInt(7, item.getKarma());
+        prepared.setInt(8, item.getId());
+
+        prepared.execute();
+
+        sql = "UPDATE \"" + getTableName() + "\" SET status = ?;";
+        prepared = connection.prepareStatement(sql);
+        prepared.setString(1, item.getStatus().getId());
     }
 }

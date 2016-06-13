@@ -1,9 +1,5 @@
 package main.logic;
 
-import main.database.OrderDataMapper;
-
-import java.sql.SQLException;
-
 /**
  * Created by oglandx on 5/8/16.
  */
@@ -19,11 +15,11 @@ public class Passenger extends UserWithKarma {
         register(regData);
     }
 
-    public Order createOrder() throws SQLException {
-        Order order = new Order();
-        order.assignPassenger(this);
-        OrderDataMapper orderDataMapper = new OrderDataMapper();
-        orderDataMapper.insert(order);
-        return order;
+    public boolean acceptOrder(Order order) {
+        return order.getStatus().eq(OrderStatus.NEW) && order.assignPassenger(this);
+    }
+
+    public boolean declineOrder(Order order) {
+        return order.getPassenger().getId() == getId() && order.setStatus(OrderStatus.DECLINED);
     }
 }

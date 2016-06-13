@@ -61,7 +61,7 @@ CREATE TABLE "Order" (
   creationTime timestamp,
   status       varchar(100),
   address_id   int4 NOT NULL,
-  payment_id   int4 NOT NULL,
+  payment_id   int4,
   passenger_id int4,
   driver_id    int4,
   PRIMARY KEY (id));

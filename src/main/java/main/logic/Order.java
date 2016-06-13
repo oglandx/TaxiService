@@ -15,8 +15,9 @@ public class Order extends Entity implements AbstractOrder {
     private Address address = null;
     private Payment payment = null;
 
-    public Order(){
+    public Order(Address address){
         creationTime = new Timestamp(new Date().getTime());
+        setAddress(address);
     }
 
     public Order(int id, Timestamp creationTime, String status, Address address,

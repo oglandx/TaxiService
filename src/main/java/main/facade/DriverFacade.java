@@ -7,8 +7,6 @@ import main.logic.Driver;
 import main.logic.RegisterData;
 import main.repository.DriverRepository;
 import main.repository.exceptions.DatabaseException;
-import main.repository.exceptions.MultipleObjectsException;
-import main.repository.exceptions.ObjectNotFoundException;
 
 import java.sql.SQLException;
 
@@ -40,36 +38,37 @@ public class DriverFacade implements UserFacade<Driver> {
     }
 
     @Override
-    public boolean registerNew(RegisterData regData) throws ApplicationError {
-        String existenceQuery = "{'email': '" + regData.getEmail() + "'}";
-        if(Util.checkQuery(repository, new Query(existenceQuery))) {
-            return false;
+    public Driver registerNew(RegisterData regData) throws ApplicationError {
+        Query query = new Query("{'email': '" + regData.getEmail() + "'}");
+        if(Util.checkQuery(repository, query)) {
+            return null;
         }
 
-        Driver driver = new Driver(regData);
+        Driver driver;
         try {
-            repository.create(driver);
+            repository.create(new Driver(regData));
+            driver = Util.extract(repository, query);
         }
         catch (DatabaseException e){
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return true;
+        return driver;
     }
 
     @Override
-    public boolean registerNew(Driver driver) throws ApplicationError {
+    public Driver registerNew(Driver driver) throws ApplicationError {
         return registerNew(driver.getRegData());
     }
 
     @Override
-    public boolean auth(AuthData authData) throws ApplicationError {
+    public Driver auth(AuthData authData) throws ApplicationError {
         String query = "{'email': '" + authData.getEmail() + "', 'pass': '" + authData.getPassHash() + "'}";
-        return Util.checkQuery(repository, new Query(query));
+        return Util.extract(repository, new Query(query));
     }
 
     @Override
-    public boolean auth(Driver driver) throws ApplicationError {
+    public Driver auth(Driver driver) throws ApplicationError {
         return auth(driver.getRegData().getAuthData());
     }
 

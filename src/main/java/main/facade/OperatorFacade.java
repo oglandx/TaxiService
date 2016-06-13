@@ -1,23 +1,27 @@
 package main.facade;
 
 import main.common.Query;
+import main.database.DriverDataMapper;
 import main.database.OperatorDataMapper;
-import main.logic.AuthData;
-import main.logic.Operator;
-import main.logic.RegisterData;
+import main.database.OrderDataMapper;
+import main.logic.*;
+import main.repository.DriverRepository;
 import main.repository.OperatorRepository;
+import main.repository.OrderRepository;
 import main.repository.exceptions.DatabaseException;
-import main.repository.exceptions.MultipleObjectsException;
-import main.repository.exceptions.ObjectNotFoundException;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by oglandx on 6/12/16.
  */
 public class OperatorFacade implements UserFacade<Operator> {
-    private static OperatorRepository repository = null;
     private static OperatorFacade instance = null;
+
+    private static OperatorRepository repository = null;
+    private static OrderRepository orderRepository = null;
+    private static DriverRepository driverRepository = null;
 
     private OperatorFacade() throws ApplicationError {
         if (repository == null) {
@@ -30,6 +34,26 @@ public class OperatorFacade implements UserFacade<Operator> {
             }
             repository = new OperatorRepository(dataMapper);
         }
+        if(orderRepository == null){
+            OrderDataMapper dataMapper = null;
+            try {
+                dataMapper = new OrderDataMapper();
+            }
+            catch (SQLException e){
+                throw new ApplicationError(e);
+            }
+            orderRepository = new OrderRepository(dataMapper);
+        }
+        if(driverRepository == null){
+            DriverDataMapper dataMapper = null;
+            try {
+                dataMapper = new DriverDataMapper();
+            }
+            catch (SQLException e){
+                throw new ApplicationError(e);
+            }
+            driverRepository = new DriverRepository(dataMapper);
+        }
     }
 
     public static OperatorFacade getInstance() throws ApplicationError{
@@ -40,36 +64,37 @@ public class OperatorFacade implements UserFacade<Operator> {
     }
 
     @Override
-    public boolean registerNew(RegisterData regData) throws ApplicationError {
-        String existenceQuery = "{'email': '" + regData.getEmail() + "'}";
-        if(Util.checkQuery(repository, new Query(existenceQuery))) {
-            return false;
+    public Operator registerNew(RegisterData regData) throws ApplicationError {
+        Query query = new Query("{'email': '" + regData.getEmail() + "'}");
+        if(Util.checkQuery(repository, query)) {
+            return null;
         }
 
-        Operator passenger = new Operator(regData);
+        Operator operator;
         try {
-            repository.create(passenger);
+            repository.create(new Operator(regData));
+            operator = Util.extract(repository, query);
         }
         catch (DatabaseException e){
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return true;
+        return operator;
     }
 
     @Override
-    public boolean registerNew(Operator operator) throws ApplicationError {
+    public Operator registerNew(Operator operator) throws ApplicationError {
         return registerNew(operator.getRegData());
     }
 
     @Override
-    public boolean auth(AuthData authData) throws ApplicationError {
+    public Operator auth(AuthData authData) throws ApplicationError {
         String query = "{'email': '" + authData.getEmail() + "', 'pass': '" + authData.getPassHash() + "'}";
-        return Util.checkQuery(repository, new Query(query));
+        return Util.extract(repository, new Query(query));
     }
 
     @Override
-    public boolean auth(Operator operator) throws ApplicationError {
+    public Operator auth(Operator operator) throws ApplicationError {
         return auth(operator.getRegData().getAuthData());
     }
 
@@ -83,5 +108,29 @@ public class OperatorFacade implements UserFacade<Operator> {
             return false;
         }
         return true;
+    }
+
+    public List<Order> getOrderList() throws ApplicationError {
+        String query = "{'status': '" + OrderStatus.NEW + "'}";
+        List<Order> orders;
+        try {
+            orders = orderRepository.filter(new Query(query));
+        }
+        catch (DatabaseException e) {
+            throw new ApplicationError(e);
+        }
+        return orders;
+    }
+
+    public List<Driver> getFreeDrivers() throws ApplicationError {
+        Query query = new Query("{'status': '" + DriverStatus.FREE + "'}");
+        List<Driver> drivers;
+        try {
+            drivers = driverRepository.filter(query);
+        }
+        catch (DatabaseException e){
+            throw new ApplicationError(e);
+        }
+        return drivers;
     }
 }

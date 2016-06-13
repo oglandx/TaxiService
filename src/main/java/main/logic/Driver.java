@@ -15,10 +15,11 @@ public class Driver extends UserWithKarma implements AbstractDriver {
     private int waitedTime = 0;
     private ArrayList<Order> availableOrders = new ArrayList<>();
 
-    public Driver(int id, RegisterData regData, int karma){
+    public Driver(int id, RegisterData regData, int karma, DriverStatus status){
         setId(id);
         register(regData);
         setKarma(karma);
+        setStatus(status);
     }
 
     public Driver(RegisterData regData){

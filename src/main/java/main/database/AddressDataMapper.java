@@ -36,7 +36,7 @@ public class AddressDataMapper extends SimpleTableDataMapper<Address> {
 
     @Override
     public void insert(Address item) throws SQLException {
-        String sql = "INSERT INTO \"" + getTableName() + "\" SET city=?, street=?, building=?;";
+        String sql = "INSERT INTO \"" + getTableName() + "\" (city, street, building) VALUES (?, ?, ?)";
         PreparedStatement prepared = connection.prepareStatement(sql);
         prepared.setString(1, item.getCity());
         prepared.setString(2, item.getStreet());

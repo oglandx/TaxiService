@@ -18,13 +18,15 @@ import java.util.stream.Collectors;
 public abstract class Repository<T extends Entity> implements AbstractRepository<T> {
     protected List<T> list = new ArrayList<>();
     private AbstractDataMapper<T> dataMapper = null;
+    private boolean dataMapperEnabled = false;
 
-    Repository(AbstractDataMapper<T> dataMapper){
+    Repository(AbstractDataMapper<T> dataMapper) {
         this.dataMapper = dataMapper;
+        dataMapperEnabled = dataMapper != null;
     }
 
-    public AbstractDataMapper<T> getDataMapper(){
-        return dataMapper;
+    public AbstractDataMapper<T> getDataMapper() {
+        return dataMapperEnabled ? dataMapper : null;
     }
 
     @Override
@@ -138,5 +140,9 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
                 throw new DatabaseException(e);
             }
         }
+    }
+
+    public void enableDataMapper(boolean value){
+        dataMapperEnabled = value;
     }
 }

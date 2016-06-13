@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by oglandx on 6/5/16.
@@ -143,6 +144,7 @@ public class Query {
             }
         }
         catch (JSONException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
+            e.printStackTrace();
             return false;
         }
 
@@ -152,10 +154,15 @@ public class Query {
     }
 
     public String sql(){
-        return makeSql(query, "AND");
+        return makeSql(query, "AND", null, null);
     }
 
-    private String makeSql(JSONObject query, String operation){
+    public String sql(Map<String, String> dispatcher, String table){
+        // dispatcher: field -> table
+        return makeSql(query, "AND", dispatcher, table);
+    }
+
+    private String makeSql(JSONObject query, String operation, Map<String, String> dispatcher, String table){
         if(query == null || operation == null){
             return "FALSE";
         }
@@ -187,6 +194,14 @@ public class Query {
                 final String name = parsedQuery[0];
 
                 if(name.equals("AND") || name.equals("OR")){
+                    continue;
+                }
+
+                if(dispatcher != null && (
+                        table == null && dispatcher.get(name) != null ||
+                        table != null && (
+                                dispatcher.get(name) == null ||
+                                !dispatcher.get(name).equals(table)))) {
                     continue;
                 }
 
@@ -231,8 +246,9 @@ public class Query {
         }
 
         if(sub != null) {
-            sqlQueries.add(makeSql(sub, subOperation));
+            sqlQueries.add(makeSql(sub, subOperation, dispatcher, table));
         }
-        return "(" + String.join(" " + operation + " ", sqlQueries) + ")";
+        String statement = sqlQueries.size() == 0 ? "TRUE" : String.join(" " + operation + " ", sqlQueries);
+        return "(" + statement + ")";
     }
 }

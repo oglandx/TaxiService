@@ -17,7 +17,7 @@ public abstract class SimpleTableDataMapper<T extends Entity> extends DataMapper
     abstract String getTableName();
 
     @Override
-    public T get(Query query) throws SQLException, SQLMultipleObjectsException {
+    public T get(Query query) throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "SELECT * FROM \"" + getTableName() + "\" WHERE " + query.sql() +  ";";
         ResultSet resultSet = statement.executeQuery(sql);

@@ -58,21 +58,21 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
         prepared.setTimestamp(1, item.getCreationTime());
         prepared.setString(2, item.getStatus().getId());
         prepared.setInt(3, item.getAddress().getId());
-        if(item.getPayment() == null) {
+        if(item.getPayment() != null) {
             prepared.setInt(4, item.getPayment().getId());
         }
         else {
             prepared.setNull(4, Types.INTEGER);
         }
 
-        if(item.getPassenger() == null) {
+        if(item.getPassenger() != null) {
             prepared.setInt(5, item.getPassenger().getId());
         }
         else {
             prepared.setNull(5, Types.INTEGER);
         }
 
-        if(item.getDriver() == null) {
+        if(item.getDriver() != null) {
             prepared.setInt(6, item.getDriver().getId());
         }
         else {

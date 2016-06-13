@@ -58,4 +58,8 @@ public enum OrderStatus {
         }
         return result;
     }
+
+    public boolean eq(OrderStatus orderStatus){
+        return this.getId().equals(orderStatus.getId());
+    }
 }
