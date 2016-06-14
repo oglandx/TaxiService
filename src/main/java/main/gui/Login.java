@@ -2,12 +2,10 @@ package main.gui;
 
 import main.facade.*;
 import main.gui.driver.DriverGUI;
+import main.gui.driver.DriverGUIDrive;
 import main.gui.operator.OperatorGUI;
 import main.gui.passenger.PassengerGUI;
-import main.logic.AuthData;
-import main.logic.Driver;
-import main.logic.Operator;
-import main.logic.Passenger;
+import main.logic.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -97,11 +95,17 @@ public class Login extends JFrame {
                         JOptionPane.showMessageDialog(null, "Wrong auth data for driver",
                                 "Warning!", JOptionPane.WARNING_MESSAGE);
                     } else {
+                        Order currentOrder = driverFacade.getCurrentOrder(driver);
                         JOptionPane.showMessageDialog(this, "Authentication is successful",
                                 "Success!", JOptionPane.INFORMATION_MESSAGE);
                         setVisible(false);
                         dispose();
-                        new DriverGUI(driverFacade, driver);
+                        if (currentOrder == null) {
+                            new DriverGUI(driverFacade, driver);
+                        }
+                        else {
+                            new DriverGUIDrive(driverFacade, driver, currentOrder);
+                        }
                     }
                 }
             }

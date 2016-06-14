@@ -11,6 +11,8 @@ import main.repository.OrderRepository;
 import main.repository.PaymentRepository;
 import main.repository.RateRepository;
 import main.repository.exceptions.DatabaseException;
+import main.repository.exceptions.MultipleObjectsException;
+import main.repository.exceptions.ObjectNotFoundException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -247,5 +249,20 @@ public class DriverFacade implements UserFacade<Driver> {
 
     public Rate getCurrentRate(Driver driver) {
         return driver.getCurrentRate();
+    }
+
+    public Order getCurrentOrder(Driver driver) throws ApplicationError {
+        Order order;
+        Query query = new Query("{'status': '" + OrderStatus.ACCEPTED + "', 'driver_id': '" + driver.getId() + "'}");
+        try {
+            order = orderRepository.get(query);
+        }
+        catch (ObjectNotFoundException e) {
+            order = null;
+        }
+        catch (DatabaseException | MultipleObjectsException e) {
+            throw new ApplicationError(e);
+        }
+        return order;
     }
 }

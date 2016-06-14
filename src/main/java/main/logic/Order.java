@@ -65,7 +65,7 @@ public class Order extends Entity implements AbstractOrder {
 
     @Override
     public boolean bindDriver(final Driver driver) {
-        if (this.driver == null && driver != null) {
+        if ((this.driver == null || this.driver.getId() == driver.getId()) && driver != null) {
             this.driver = driver;
             return true;
         }
