@@ -1,6 +1,8 @@
 package main.logic;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -110,5 +112,10 @@ public class Order extends Entity implements AbstractOrder {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    @Override
+    public String toString() {
+        return "Order #" + getId() + " (" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(getCreationTime()) + ")";
     }
 }

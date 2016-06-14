@@ -62,4 +62,11 @@ public enum OrderStatus {
     public boolean eq(OrderStatus orderStatus){
         return this.getId().equals(orderStatus.getId());
     }
+
+    public static OrderStatus getValue(String name) {
+        if (name == null){
+            return null;
+        }
+        return OrderStatus.valueOf(name);
+    }
 }
