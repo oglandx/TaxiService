@@ -25,7 +25,7 @@ public abstract class UserDataMapper<T extends User> extends DataMapper<T> {
 
     @Override
     public T get(Query query) throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = getConnection().createStatement();
         String sql =
                 "SELECT * FROM \"User\" " +
                         "WHERE \"id\" IN (" +
@@ -38,7 +38,7 @@ public abstract class UserDataMapper<T extends User> extends DataMapper<T> {
 
     @Override
     public List<T> filter(Query query) throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = getConnection().createStatement();
         String sql =
                 "SELECT * FROM \"User\" " +
                         "WHERE \"id\" IN (" +
@@ -51,7 +51,7 @@ public abstract class UserDataMapper<T extends User> extends DataMapper<T> {
 
     @Override
     public List<T> all() throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = getConnection().createStatement();
         String sql =
                 "SELECT * FROM \"User\" " +
                 "WHERE \"id\" IN (SELECT \"user_id\" FROM \"" + getTableName() + "\");";
@@ -66,7 +66,7 @@ public abstract class UserDataMapper<T extends User> extends DataMapper<T> {
                 "WHERE user_id in (SELECT id FROM \"User\" WHERE" + query.sql(getDispatcher(), null) + ") AND " +
                         query.sql(getDispatcher(), getTableName()) + ";" +
                 "DELETE FROM \"User\" WHERE " + query.sql(getDispatcher(), null) + "; ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.execute();
     }
 }

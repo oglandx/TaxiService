@@ -13,12 +13,7 @@ import java.sql.SQLException;
 public class RateDataMapper extends SimpleTableDataMapper<Rate> {
 
     public RateDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -34,7 +29,7 @@ public class RateDataMapper extends SimpleTableDataMapper<Rate> {
     @Override
     public void insert(Rate item) throws SQLException {
         String sql = "INSERT INTO \"" + getTableName() + "\" (costperkm, costpermin, freeminutes) VALUES (?, ?, ?);";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setBigDecimal(1, item.getCostPerKm());
         prepared.setBigDecimal(2, item.getCostPerMin());
         prepared.setInt(3, item.getFreeMinutes());
@@ -45,7 +40,7 @@ public class RateDataMapper extends SimpleTableDataMapper<Rate> {
     @Override
     public void update(Rate item) throws SQLException {
         String sql = "UPDATE \"" + getTableName() + "\" SET costperkm=?, costpermin=?, freeminutes=?;";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setBigDecimal(1, item.getCostPerKm());
         prepared.setBigDecimal(2, item.getCostPerMin());
         prepared.setInt(3, item.getFreeMinutes());

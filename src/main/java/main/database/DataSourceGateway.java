@@ -18,7 +18,7 @@ public class DataSourceGateway {
     public static final String PASSWORD = "taximasterpass";
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
-        if(connection == null){
+        if(connection == null || connection.isClosed()){
             Class.forName("org.postgresql.Driver");
             final String url = "jdbc:" + JDBC + "://" + HOST + ":" + PORT + "/" + DATABASE;
             connection = DriverManager.getConnection(url, USERNAME, PASSWORD);

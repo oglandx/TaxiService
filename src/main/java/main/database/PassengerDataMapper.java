@@ -16,12 +16,7 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
     }
 
     public PassengerDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -43,7 +38,7 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
         String sql =
                 "INSERT INTO \"User\" (lastname, firstname, middlename, birthdate, email, pass, karma)"  +
                         "VALUES (?, ?, ?, ?, ?, ?, ?); ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());
@@ -59,7 +54,7 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
                         "(SELECT id FROM \"User\" WHERE email = ? " +
                         "AND id not in (SELECT user_id FROM \"" + getTableName() + "\")); ";
 
-        prepared = connection.prepareStatement(sql);
+        prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getEmail());
         prepared.execute();
     }
@@ -70,7 +65,7 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
                 "UPDATE \"User\" " +
                         "SET lastname = ?, firstname = ?, middlename = ?, birthdate = ?, email = ?, pass = ?, " +
                         "karma = ? WHERE id = ?; ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());

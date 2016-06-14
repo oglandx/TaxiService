@@ -12,12 +12,7 @@ import java.sql.SQLException;
 public class AddressDataMapper extends SimpleTableDataMapper<Address> {
 
     public AddressDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -37,7 +32,7 @@ public class AddressDataMapper extends SimpleTableDataMapper<Address> {
     @Override
     public void insert(Address item) throws SQLException {
         String sql = "INSERT INTO \"" + getTableName() + "\" (city, street, building) VALUES (?, ?, ?)";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getCity());
         prepared.setString(2, item.getStreet());
         prepared.setString(3, item.getBuilding());
@@ -48,7 +43,7 @@ public class AddressDataMapper extends SimpleTableDataMapper<Address> {
     @Override
     public void update(Address item) throws SQLException {
         String sql = "UPDATE \"" + getTableName() + "\" SET city=?, street=?, building=?;";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getCity());
         prepared.setString(2, item.getStreet());
         prepared.setString(3, item.getBuilding());

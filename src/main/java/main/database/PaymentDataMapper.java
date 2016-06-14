@@ -14,12 +14,7 @@ import java.sql.SQLException;
 public class PaymentDataMapper extends SimpleTableDataMapper<Payment> {
 
     public PaymentDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -37,7 +32,7 @@ public class PaymentDataMapper extends SimpleTableDataMapper<Payment> {
     @Override
     public void insert(Payment item) throws SQLException {
         String sql = "INSERT INTO \"" + getTableName() + "\" (distance, waitmin, rate_id) VALUES (?, ?, ?);";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setInt(1, item.getDistance());
         prepared.setInt(2, item.getWaitMin());
         prepared.setInt(3, item.getRate().getId());
@@ -48,7 +43,7 @@ public class PaymentDataMapper extends SimpleTableDataMapper<Payment> {
     @Override
     public void update(Payment item) throws SQLException {
         String sql = "UPDATE \"" + getTableName() + "\" SET distance=?, waitmin=?, rate_id=?;";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setInt(1, item.getDistance());
         prepared.setInt(2, item.getWaitMin());
         prepared.setInt(3, item.getRate().getId());

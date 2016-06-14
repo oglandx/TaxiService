@@ -13,12 +13,7 @@ import java.util.List;
 public class OrderDataMapper extends SimpleTableDataMapper<Order>{
 
     public OrderDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -54,7 +49,7 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
     public void insert(Order item) throws SQLException {
         String sql = "INSERT INTO \"" + getTableName() +
                 "\" (creationtime, status, address_id, payment_id, passenger_id, driver_id) VALUES (?, ?, ?, ?, ?, ?);";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setTimestamp(1, item.getCreationTime());
         prepared.setString(2, item.getStatus().getId());
         prepared.setInt(3, item.getAddress().getId());
@@ -86,7 +81,7 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
     public void update(Order item) throws SQLException {
         String sql = "UPDATE \"" + getTableName() +
                 "\" SET creationtime=?, status=?, address_id=?, payment_id=?, passenger_id=?, driver_id=?;";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setTimestamp(1, item.getCreationTime());
         prepared.setString(2, item.getStatus().getId());
         prepared.setInt(3, item.getAddress().getId());

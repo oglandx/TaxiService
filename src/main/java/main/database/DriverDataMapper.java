@@ -25,12 +25,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
     }
 
     public DriverDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -45,7 +40,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
         int karma = resultSet.getInt("karma");
 
         String sql = "SELECT status FROM \"" + getTableName() + "\" WHERE id = " + id + ";";
-        resultSet = connection.createStatement().executeQuery(sql);
+        resultSet = getConnection().createStatement().executeQuery(sql);
         DriverStatus status = resultSet.next() && resultSet.getObject("status") != null ?
                 DriverStatus.valueOf(resultSet.getString("status")) : DriverStatus.FREE;
 
@@ -57,7 +52,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
         String sql =
                 "INSERT INTO \"User\" (lastname, firstname, middlename, birthdate, email, pass, karma)"  +
                         "VALUES (?, ?, ?, ?, ?, ?, ?); ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());
@@ -72,7 +67,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
                 "INSERT INTO \"" + getTableName() + "\"(user_id)" +
                         "VALUES((SELECT id FROM \"User\" WHERE email = ? "  +
                         "AND id not in (SELECT user_id FROM \"" + getTableName() + "\")), ?);";
-        prepared = connection.prepareStatement(sql);
+        prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getEmail());
         prepared.setString(2, item.getStatus().getId());
         prepared.execute();
@@ -84,7 +79,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
                 "UPDATE \"User\" " +
                         "SET lastname = ?, firstname = ?, middlename = ?, birthdate = ?, email = ?, pass = ?, " +
                         "karma = ? WHERE id = ?; ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());
@@ -97,7 +92,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
         prepared.execute();
 
         sql = "UPDATE \"" + getTableName() + "\" SET status = ?;";
-        prepared = connection.prepareStatement(sql);
+        prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getStatus().getId());
     }
 }

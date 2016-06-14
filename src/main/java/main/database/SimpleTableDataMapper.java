@@ -18,7 +18,7 @@ public abstract class SimpleTableDataMapper<T extends Entity> extends DataMapper
 
     @Override
     public T get(Query query) throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = getConnection().createStatement();
         String sql = "SELECT * FROM \"" + getTableName() + "\" WHERE " + query.sql() +  ";";
         ResultSet resultSet = statement.executeQuery(sql);
         return single(resultSet);
@@ -26,7 +26,7 @@ public abstract class SimpleTableDataMapper<T extends Entity> extends DataMapper
 
     @Override
     public List<T> filter(Query query) throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = getConnection().createStatement();
         String sql = "SELECT * FROM \"" + getTableName() + "\" WHERE " + query.sql() +  ";";
         ResultSet resultSet = statement.executeQuery(sql);
         return multiple(resultSet);
@@ -34,7 +34,7 @@ public abstract class SimpleTableDataMapper<T extends Entity> extends DataMapper
 
     @Override
     public List<T> all() throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = getConnection().createStatement();
         String sql = "SELECT * FROM \"" + getTableName() + "\";";
         ResultSet resultSet = statement.executeQuery(sql);
         return multiple(resultSet);
@@ -43,7 +43,7 @@ public abstract class SimpleTableDataMapper<T extends Entity> extends DataMapper
     @Override
     public void delete(Query query) throws SQLException {
         String sql = "DELETE FROM \"" + getTableName() + "\" WHERE " + query.sql() + ";";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.execute();
     }
 }

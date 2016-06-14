@@ -14,12 +14,7 @@ import java.sql.SQLException;
 public class OperatorDataMapper extends UserDataMapper<Operator> {
 
     public OperatorDataMapper() throws SQLException {
-        try {
-            connection = DataSourceGateway.getConnection();
-        }
-        catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        getConnection();
     }
 
     @Override
@@ -45,7 +40,7 @@ public class OperatorDataMapper extends UserDataMapper<Operator> {
         String sql =
                 "INSERT INTO \"User\" (lastname, firstname, middlename, birthdate, email, pass)"  +
                         "VALUES (?, ?, ?, ?, ?, ?); ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());
@@ -59,7 +54,7 @@ public class OperatorDataMapper extends UserDataMapper<Operator> {
                 "INSERT INTO \"" + getTableName() + "\"(user_id)" +
                         "(SELECT id FROM \"User\" WHERE lastname=? AND firstname=? AND middlename=? AND birthdate=? " +
                         "AND email=? AND pass=? AND id not in (SELECT user_id FROM passenger));";
-        prepared = connection.prepareStatement(sql);
+        prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());
@@ -76,7 +71,7 @@ public class OperatorDataMapper extends UserDataMapper<Operator> {
                 "UPDATE \"User\" " +
                         "SET lastname = ?, firstname = ?, middlename = ?, birthdate = ?, email = ?, pass = ?"  +
                         "WHERE id = ?; ";
-        PreparedStatement prepared = connection.prepareStatement(sql);
+        PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());
         prepared.setString(3, item.getRegData().getMiddleName());

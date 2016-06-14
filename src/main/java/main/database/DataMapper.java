@@ -13,7 +13,19 @@ import java.util.List;
  * Created by oglandx on 5/23/16.
  */
 public abstract class DataMapper<T> implements AbstractDataMapper<T> {
-    Connection connection = null;
+    private Connection connection = null;
+
+    public Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            try {
+                connection = DataSourceGateway.getConnection();
+            }
+            catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
+        }
+        return connection;
+    }
 
     List<T> multiple(ResultSet resultSet) throws SQLException {
         List<T> results = new ArrayList<>();
