@@ -46,6 +46,12 @@ public class Registration extends JFrame {
         setVisible(true);
 
         registerButton.addActionListener(this::register);
+        lastNameField.addActionListener(this::register);
+        firstNameField.addActionListener(this::register);
+        middleNameField.addActionListener(this::register);
+        birthDateField.addActionListener(this::register);
+        emailField.addActionListener(this::register);
+        passwordField.addActionListener(this::register);
     }
 
     private void register(ActionEvent e) {
