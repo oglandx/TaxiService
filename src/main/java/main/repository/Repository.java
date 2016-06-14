@@ -107,7 +107,7 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
 
     @Override
     public List<T> filter(Query query) throws DatabaseException {
-        List<T> result;
+        List<T> result = new ArrayList<>();
         if (getDataMapper() == null){
             result = this.list.stream()
                     .filter(query::check)
@@ -116,6 +116,9 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
         else {
             try {
                 result = getDataMapper().filter(query);
+            }
+            catch (SQLObjectNotFoundException e) {
+                // it's normal
             }
             catch (SQLException e){
                 throw new DatabaseException(e);

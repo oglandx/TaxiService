@@ -39,10 +39,11 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
         String pass = resultSet.getString("pass");
         int karma = resultSet.getInt("karma");
 
-        String sql = "SELECT status FROM \"" + getTableName() + "\" WHERE id = " + id + ";";
+        String sql = "SELECT * FROM \"" + getTableName() + "\" WHERE user_id = " + id + ";";
         resultSet = getConnection().createStatement().executeQuery(sql);
         DriverStatus status = resultSet.next() && resultSet.getObject("status") != null ?
                 DriverStatus.valueOf(resultSet.getString("status")) : DriverStatus.FREE;
+        id = resultSet.getInt("id");
 
         return new Driver(id, new RegisterData(lastname, firstname, middlename, birthdate, email, pass), karma, status);
     }
@@ -64,7 +65,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
         prepared.execute();
 
         sql =
-                "INSERT INTO \"" + getTableName() + "\"(user_id)" +
+                "INSERT INTO \"" + getTableName() + "\"(user_id, status)" +
                         "VALUES((SELECT id FROM \"User\" WHERE email = ? "  +
                         "AND id not in (SELECT user_id FROM \"" + getTableName() + "\")), ?);";
         prepared = getConnection().prepareStatement(sql);
@@ -91,7 +92,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
 
         prepared.execute();
 
-        sql = "UPDATE \"" + getTableName() + "\" SET status = ? WHERE id = ?;";
+        sql = "UPDATE \"" + getTableName() + "\" SET status = ? WHERE user_id = ?;";
         prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getStatus().getId());
         prepared.setInt(2, item.getId());
