@@ -76,7 +76,9 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
                 throw new DatabaseException(e);
             }
         }
-        list.add(item);
+        else {
+            list.add(item);
+        }
     }
 
     @Override
