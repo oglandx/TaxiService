@@ -57,6 +57,7 @@ public class OperatorGUI extends JFrame {
 
         orderList.addListSelectionListener(e -> {
             Order order = orderList.getSelectedValue();
+            freeDriversList.clearSelection();
             if (order == null) {
                 cityField.setText("");
                 streetField.setText("");
@@ -71,12 +72,16 @@ public class OperatorGUI extends JFrame {
                 orderField.setText(order.toString());
                 statusField.setText(order.getStatus().getId());
             }
+            driverField.setText("");
             findOptimalDriverButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DECLINED));
+            acceptFoundDriverButton.setEnabled(false);
         });
 
         freeDriversList.addListSelectionListener(e -> {
             Driver selectedDriver = freeDriversList.getSelectedValue();
-            acceptFoundDriverButton.setEnabled(selectedDriver != null);
+            Order selectedOrder = orderList.getSelectedValue();
+            acceptFoundDriverButton.setEnabled(selectedDriver != null && selectedOrder != null);
+            selectBestDriver(selectedDriver);
         });
 
         reloadOrderList();
@@ -111,6 +116,7 @@ public class OperatorGUI extends JFrame {
             freeDrivers = facade.getFreeDrivers();
             freeDriversList.setModel(driverListModel);
             freeDrivers.forEach(driverListModel::addElement);
+            driverField.setText("");
         }
         catch (ApplicationError e){
             e.printStackTrace();
@@ -120,8 +126,12 @@ public class OperatorGUI extends JFrame {
     }
 
     private void selectBestDriver(Driver driver) {
-        if (freeDrivers != null && driver != null) {
-            freeDriversList.setSelectedIndex(freeDrivers.indexOf(bestDriver));
+        if (freeDrivers != null && driver != null && orderList.getSelectedValue() != null) {
+            freeDriversList.setSelectedIndex(freeDrivers.indexOf(driver));
+            driverField.setText(driver.toString());
+        }
+        else {
+            driverField.setText("");
         }
     }
 
@@ -137,6 +147,9 @@ public class OperatorGUI extends JFrame {
                 switch (chooseDriverComboBox.getSelectedIndex()) {
                     case 0:
                         strategy = new ChooseDriverStrategyBestKarma();
+                        break;
+                    case 1:
+                        strategy = new ChooseDriverStrategyWorstKarma();
                         break;
                     default:
                         JOptionPane.showMessageDialog(null, "Unexpected selection in choose driver combo box",

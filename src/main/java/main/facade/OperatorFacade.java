@@ -126,7 +126,7 @@ public class OperatorFacade implements UserFacade<Operator> {
     }
 
     public List<Order> getOrderList() throws ApplicationError {
-        String query = "{'status__in': '" + OrderStatus.NEW + "," + OrderStatus.PROCESSING + "'}";
+        String query = "{'status': '" + OrderStatus.NEW + "'}";
         List<Order> orders;
         try {
             orders = orderRepository.filter(new Query(query));

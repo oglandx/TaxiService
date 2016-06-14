@@ -167,6 +167,7 @@
                     <properties>
                       <model>
                         <item value="Driver with best karma"/>
+                        <item value="Driver with worst karma"/>
                       </model>
                     </properties>
                   </component>
