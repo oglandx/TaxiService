@@ -39,11 +39,12 @@ public class RateDataMapper extends SimpleTableDataMapper<Rate> {
 
     @Override
     public void update(Rate item) throws SQLException {
-        String sql = "UPDATE \"" + getTableName() + "\" SET costperkm=?, costpermin=?, freeminutes=?;";
+        String sql = "UPDATE \"" + getTableName() + "\" SET costperkm = ?, costpermin = ?, freeminutes = ? WHERE id = ?;";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setBigDecimal(1, item.getCostPerKm());
         prepared.setBigDecimal(2, item.getCostPerMin());
         prepared.setInt(3, item.getFreeMinutes());
+        prepared.setInt(4, item.getId());
 
         prepared.execute();
     }

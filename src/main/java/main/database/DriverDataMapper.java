@@ -91,8 +91,9 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
 
         prepared.execute();
 
-        sql = "UPDATE \"" + getTableName() + "\" SET status = ?;";
+        sql = "UPDATE \"" + getTableName() + "\" SET status = ? WHERE id = ?;";
         prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getStatus().getId());
+        prepared.setInt(2, item.getId());
     }
 }

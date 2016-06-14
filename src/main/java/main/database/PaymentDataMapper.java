@@ -42,11 +42,12 @@ public class PaymentDataMapper extends SimpleTableDataMapper<Payment> {
 
     @Override
     public void update(Payment item) throws SQLException {
-        String sql = "UPDATE \"" + getTableName() + "\" SET distance=?, waitmin=?, rate_id=?;";
+        String sql = "UPDATE \"" + getTableName() + "\" SET distance=?, waitmin=?, rate_id=? WHERE id = ?;";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setInt(1, item.getDistance());
         prepared.setInt(2, item.getWaitMin());
         prepared.setInt(3, item.getRate().getId());
+        prepared.setInt(4, item.getId());
 
         prepared.execute();
     }

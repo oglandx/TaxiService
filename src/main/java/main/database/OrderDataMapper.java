@@ -80,31 +80,32 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
     @Override
     public void update(Order item) throws SQLException {
         String sql = "UPDATE \"" + getTableName() +
-                "\" SET creationtime=?, status=?, address_id=?, payment_id=?, passenger_id=?, driver_id=?;";
+                "\" SET creationtime=?, status=?, address_id=?, payment_id=?, passenger_id=?, driver_id=? WHERE id = ?;";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setTimestamp(1, item.getCreationTime());
         prepared.setString(2, item.getStatus().getId());
         prepared.setInt(3, item.getAddress().getId());
-        if(item.getPayment() == null) {
+        if(item.getPayment() != null) {
             prepared.setInt(4, item.getPayment().getId());
         }
         else {
             prepared.setNull(4, Types.INTEGER);
         }
 
-        if(item.getPassenger() == null) {
+        if(item.getPassenger() != null) {
             prepared.setInt(5, item.getPassenger().getId());
         }
         else {
             prepared.setNull(5, Types.INTEGER);
         }
 
-        if(item.getDriver() == null) {
+        if(item.getDriver() != null) {
             prepared.setInt(6, item.getDriver().getId());
         }
         else {
             prepared.setNull(6, Types.INTEGER);
         }
+        prepared.setInt(7, item.getId());
 
         prepared.execute();
     }

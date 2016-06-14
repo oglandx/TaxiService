@@ -42,11 +42,12 @@ public class AddressDataMapper extends SimpleTableDataMapper<Address> {
 
     @Override
     public void update(Address item) throws SQLException {
-        String sql = "UPDATE \"" + getTableName() + "\" SET city=?, street=?, building=?;";
+        String sql = "UPDATE \"" + getTableName() + "\" SET city=?, street=?, building=? WHERE id = ?;";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getCity());
         prepared.setString(2, item.getStreet());
         prepared.setString(3, item.getBuilding());
+        prepared.setInt(4, item.getId());
 
         prepared.execute();
     }
