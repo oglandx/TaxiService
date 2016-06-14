@@ -105,4 +105,12 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="roleChooseButtonGroup">
+      <member id="b1ea4"/>
+      <member id="b1ea4"/>
+      <member id="c7c09"/>
+      <member id="2c536"/>
+    </group>
+  </buttonGroups>
 </form>

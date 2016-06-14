@@ -1,5 +1,8 @@
 package main.gui.passenger;
 
+import main.facade.PassengerFacade;
+import main.logic.Passenger;
+
 import javax.swing.*;
 
 /**
@@ -14,7 +17,12 @@ public class PassengerGUI extends JFrame {
     private JTextField textField1;
     private JButton declineOrderButton;
 
-    public PassengerGUI() {
+    private PassengerFacade facade;
+    private Passenger passenger;
+
+    public PassengerGUI(PassengerFacade facade, Passenger passenger) {
+        this.facade = facade;
+        this.passenger = passenger;
         setContentPane(panel);
         setSize(300, 300);
         setLocationRelativeTo(null);

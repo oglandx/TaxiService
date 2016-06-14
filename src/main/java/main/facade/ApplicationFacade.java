@@ -108,15 +108,15 @@ public class ApplicationFacade {
         return instance;
     }
 
-    public static PassengerFacade getPassengerFacade() {
+    public PassengerFacade getPassengerFacade() {
         return passengerFacade;
     }
 
-    public static OperatorFacade getOperatorFacade() {
+    public OperatorFacade getOperatorFacade() {
         return operatorFacade;
     }
 
-    public static DriverFacade getDriverFacade() {
+    public DriverFacade getDriverFacade() {
         return driverFacade;
     }
 }
