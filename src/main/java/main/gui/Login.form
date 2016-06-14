@@ -22,7 +22,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text value="some@mail.com"/>
+            </properties>
           </component>
           <component id="9ca8f" class="javax.swing.JLabel">
             <constraints>
@@ -38,7 +40,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text value="pwd"/>
+            </properties>
           </component>
           <component id="3b3ce" class="javax.swing.JLabel">
             <constraints>
