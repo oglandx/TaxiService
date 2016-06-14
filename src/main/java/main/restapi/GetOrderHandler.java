@@ -86,6 +86,7 @@ public class GetOrderHandler implements HttpHandler {
             passengerFacade.closeConnection();
         }
         catch (ApplicationError e) {
+            e.printStackTrace();
             result = "An error occurred";
         }
         return result;

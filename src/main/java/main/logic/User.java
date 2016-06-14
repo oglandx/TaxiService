@@ -30,4 +30,28 @@ public class User extends Entity implements AbstractUser {
     }
 
     public User(){}
+
+    public String getFirstname() {
+        return regData.getFirstName();
+    }
+
+    public String getLastname() {
+        return regData.getLastName();
+    }
+
+    public String getMiddlename() {
+        return regData.getMiddleName();
+    }
+
+    public Date getBirthdate() {
+        return regData.getBirthDate();
+    }
+
+    public String getEmail() {
+        return regData.getAuthData().getEmail();
+    }
+
+    public String getPass() {
+        return regData.getAuthData().getPassHash();
+    }
 }
