@@ -1,6 +1,7 @@
 package main.facade;
 
 import main.database.*;
+import main.logic.Driver;
 import main.repository.*;
 
 import java.sql.SQLException;
@@ -105,5 +106,17 @@ public class ApplicationFacade {
             instance = new ApplicationFacade();
         }
         return instance;
+    }
+
+    public static PassengerFacade getPassengerFacade() {
+        return passengerFacade;
+    }
+
+    public static OperatorFacade getOperatorFacade() {
+        return operatorFacade;
+    }
+
+    public static DriverFacade getDriverFacade() {
+        return driverFacade;
     }
 }
