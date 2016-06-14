@@ -53,6 +53,7 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
             if (getDataMapper() != null) {
                 try {
                     result.add(getDataMapper().get(query));
+                    list.add(result.get(0));
                 } catch (SQLObjectNotFoundException e) {
                     throw new ObjectNotFoundException(e);
                 } catch (SQLException e) {

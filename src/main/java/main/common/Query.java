@@ -59,16 +59,17 @@ public class Query {
         String subOperation;
         JSONObject sub;
         try {
-            sub = query.getJSONObject("AND");
             subOperation = "AND";
+            sub = query.getJSONObject("AND");
         }
         catch(JSONException e){
             try {
-                sub = query.getJSONObject("OR");
                 subOperation = "OR";
+                sub = query.getJSONObject("OR");
             }
             catch(JSONException ex){
-                return false;
+                sub = null;
+                subOperation = null;
             }
         }
 
@@ -148,9 +149,10 @@ public class Query {
             return false;
         }
 
-
-        return operation.equals("AND") && result && this.checkEntry(entry, sub, subOperation) ||
-                operation.equals("OR") && (result || this.checkEntry(entry, sub, subOperation));
+        return sub != null && (
+                    operation.equals("AND") && result && this.checkEntry(entry, sub, subOperation) ||
+                    operation.equals("OR") && (result || this.checkEntry(entry, sub, subOperation))) ||
+                sub == null && result;
     }
 
     public String sql(){
