@@ -21,6 +21,7 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
     public Map<String, String> getDispatcher(){
         Map<String, String> dispatcher = new HashMap<>();
         dispatcher.put("status", getTableName());
+        dispatcher.put("id", getTableName());
         return dispatcher;
     }
 
@@ -92,9 +93,11 @@ public class DriverDataMapper extends UserDataMapper<Driver> {
 
         prepared.execute();
 
-        sql = "UPDATE \"" + getTableName() + "\" SET status = ? WHERE user_id = ?;";
+        sql = "UPDATE \"" + getTableName() + "\" SET status = ? WHERE id = ?;";
         prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getStatus().getId());
         prepared.setInt(2, item.getId());
+
+        prepared.execute();
     }
 }

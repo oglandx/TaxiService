@@ -4,6 +4,8 @@ import main.logic.Passenger;
 import main.logic.RegisterData;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -17,6 +19,13 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
 
     public PassengerDataMapper() throws SQLException {
         getConnection();
+    }
+
+    @Override
+    public Map<String, String> getDispatcher() {
+        Map<String, String> dispatcher = new HashMap<>();
+        dispatcher.put("id", getTableName());
+        return dispatcher;
     }
 
     @Override

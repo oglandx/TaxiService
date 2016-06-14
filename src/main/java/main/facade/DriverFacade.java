@@ -140,7 +140,7 @@ public class DriverFacade implements UserFacade<Driver> {
     }
 
     public List<Order> getOrderList(Driver driver) throws ApplicationError {
-        String query = "{'status': '" + OrderStatus.PROCESSING + "'}";
+        String query = "{'status': '" + OrderStatus.PROCESSING + "', 'driver_id': '" + driver.getId() + "'}";
         List<Order> orders;
         try {
             orders = orderRepository.filter(new Query(query));
