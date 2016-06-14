@@ -116,4 +116,8 @@ public class Driver extends UserWithKarma implements AbstractDriver {
         this.currentRate = rate;
     }
 
+    @Override
+    public String toString() {
+        return "Driver: " + getLastname() + " " + getFirstname() + " " + getMiddlename();
+    }
 }

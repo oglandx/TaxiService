@@ -22,7 +22,10 @@ public enum DriverStatus {
         boolean result = false;
         switch (previousState){
             case FREE:
-                result = nextState == BUSY;
+                result = nextState == READY;
+                break;
+            case READY:
+                result = nextState == BUSY || nextState == FREE;
                 break;
             case BUSY:
                 result = nextState == FREE;

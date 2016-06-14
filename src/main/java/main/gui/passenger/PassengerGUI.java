@@ -99,9 +99,7 @@ public class PassengerGUI extends JFrame {
             final DefaultListModel<Order> orderListModel = new DefaultListModel<>();
             List<Order> orders = facade.getOrderList(passenger, status);
             orderList.setModel(orderListModel);
-            for (Order order: orders) {
-                orderListModel.addElement(order);
-            }
+            orders.forEach(orderListModel::addElement);
         }
         catch (ApplicationError e){
             e.printStackTrace();

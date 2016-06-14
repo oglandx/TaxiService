@@ -15,11 +15,12 @@ public class Operator extends User implements AbstractOperator {
     private ArrayList<Order> attached = new ArrayList<>();
 
     @Override
-    public boolean attachOrder(Order order) {
+    public boolean attachOrder(Order order, Driver driver) {
         if(!this.attached.contains(order) &&
                 (order.getStatus() == OrderStatus.NEW || order.getStatus() == OrderStatus.DECLINED)){
             attached.add(order);
             order.setStatus(OrderStatus.PROCESSING);
+            order.setDriver(driver);
             return true;
         }
         return false;

@@ -87,6 +87,7 @@ public class Order extends Entity implements AbstractOrder {
     }
 
     public void setDriver(Driver driver) {
+        driver.setStatus(DriverStatus.READY);
         this.driver = driver;
     }
 
