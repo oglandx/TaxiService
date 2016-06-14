@@ -56,9 +56,24 @@ public class OperatorFacade implements UserFacade<Operator> {
         }
     }
 
+    private OperatorFacade(OperatorRepository operatorRepository, DriverRepository driverRepository,
+                         OrderRepository orderRepository) {
+        repository = operatorRepository;
+        OperatorFacade.driverRepository = driverRepository;
+        OperatorFacade.orderRepository = orderRepository;
+    }
+
     public static OperatorFacade getInstance() throws ApplicationError{
         if (instance == null) {
             instance = new OperatorFacade();
+        }
+        return instance;
+    }
+
+    public static OperatorFacade initInstance(OperatorRepository operatorRepository,
+                                              DriverRepository driverRepository, OrderRepository orderRepository) {
+        if (instance == null) {
+            instance = new OperatorFacade(operatorRepository, driverRepository, orderRepository);
         }
         return instance;
     }

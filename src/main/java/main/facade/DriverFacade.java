@@ -69,9 +69,25 @@ public class DriverFacade implements UserFacade<Driver> {
         }
     }
 
+    private DriverFacade(DriverRepository driverRepository, OrderRepository orderRepository,
+                         RateRepository rateRepository, PaymentRepository paymentRepository) {
+        repository = driverRepository;
+        DriverFacade.orderRepository = orderRepository;
+        DriverFacade.rateRepository = rateRepository;
+        DriverFacade.paymentRepository = paymentRepository;
+    }
+
     public static DriverFacade getInstance() throws ApplicationError {
         if (instance == null) {
             instance = new DriverFacade();
+        }
+        return instance;
+    }
+
+    public static DriverFacade initInstance(DriverRepository driverRepository, OrderRepository orderRepository,
+                                            RateRepository rateRepository, PaymentRepository paymentRepository) {
+        if (instance == null) {
+            instance = new DriverFacade(driverRepository, orderRepository, rateRepository, paymentRepository);
         }
         return instance;
     }

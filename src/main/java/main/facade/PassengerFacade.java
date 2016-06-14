@@ -56,9 +56,24 @@ public class PassengerFacade implements UserFacade<Passenger> {
         }
     }
 
+    private PassengerFacade(PassengerRepository passengerRepository, OrderRepository orderRepository,
+                         AddressRepository addressRepository) {
+        repository = passengerRepository;
+        PassengerFacade.orderRepository = orderRepository;
+        PassengerFacade.addressRepository = addressRepository;
+    }
+
     public static PassengerFacade getInstance() throws ApplicationError {
         if (instance == null) {
             instance = new PassengerFacade();
+        }
+        return instance;
+    }
+
+    public static PassengerFacade initInstance(PassengerRepository passengerRepository, OrderRepository orderRepository,
+                                              AddressRepository addressRepository) {
+        if (instance == null) {
+            instance = new PassengerFacade(passengerRepository, orderRepository, addressRepository);
         }
         return instance;
     }
