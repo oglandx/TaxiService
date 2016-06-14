@@ -6,8 +6,10 @@ import main.gui.PaymentGUI;
 import main.logic.Driver;
 import main.logic.Order;
 import main.logic.Payment;
+import main.logic.Rate;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Created by oglandx on 6/14/16.
@@ -84,7 +86,15 @@ public class DriverGUIDrive extends JFrame {
         showPaymentButton.addActionListener(e -> {
             if (payment == null) {
                 try {
-                    payment = facade.getPayment(driver, (int)distanceSpinner.getValue());
+                    List<Rate> rates = facade.getAvailableRates();
+                    if (!rates.isEmpty()) {
+                        facade.setCurrentRate(driver, rates.get(rates.size() - 1));
+                        payment = facade.getPayment(driver, (int) distanceSpinner.getValue());
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "No rates found. Cannot calculate cost.",
+                                "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
                 } catch (ApplicationError ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "An error occurred while attaching payment to order",
