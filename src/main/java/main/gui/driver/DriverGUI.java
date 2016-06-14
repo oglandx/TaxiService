@@ -3,6 +3,7 @@ package main.gui.driver;
 import main.facade.ApplicationError;
 import main.facade.DriverFacade;
 import main.logic.Driver;
+import main.logic.DriverStatus;
 import main.logic.Order;
 
 import javax.swing.*;
@@ -100,6 +101,7 @@ public class DriverGUI extends JFrame {
                         facade.declineOrder(driver, order);
                     }
                 }
+                facade.setStatus(driver, DriverStatus.BUSY);
             } catch (ApplicationError ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred while trying to accept order and decline others",
@@ -122,6 +124,9 @@ public class DriverGUI extends JFrame {
                 if (!facade.declineOrder(driver, selectedOrder)) {
                     JOptionPane.showMessageDialog(null, "Cannot decline this order",
                             "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+                else if (facade.getOrderList(driver).isEmpty()) {
+                    facade.setStatus(driver, DriverStatus.FREE);
                 }
             } catch (ApplicationError ex) {
                 ex.printStackTrace();
