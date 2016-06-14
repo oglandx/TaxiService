@@ -2,6 +2,7 @@ package main.gui.passenger;
 
 import main.facade.ApplicationError;
 import main.facade.PassengerFacade;
+import main.gui.PaymentGUI;
 import main.logic.Order;
 import main.logic.OrderStatus;
 import main.logic.Passenger;
@@ -85,6 +86,13 @@ public class PassengerGUI extends JFrame {
             @Override
             public void windowLostFocus(WindowEvent windowEvent) {
 
+            }
+        });
+
+        showPaymentButton.addActionListener(e -> {
+            Order order = orderList.getSelectedValue();
+            if (order != null && order.getPayment() != null) {
+                new PaymentGUI(order.getPayment());
             }
         });
     }

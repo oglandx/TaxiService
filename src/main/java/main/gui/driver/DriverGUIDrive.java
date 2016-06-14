@@ -2,6 +2,7 @@ package main.gui.driver;
 
 import main.facade.ApplicationError;
 import main.facade.DriverFacade;
+import main.gui.PaymentGUI;
 import main.logic.Driver;
 import main.logic.Order;
 import main.logic.Payment;
@@ -91,6 +92,7 @@ public class DriverGUIDrive extends JFrame {
                 }
                 distanceSpinner.setEnabled(false);
             }
+            new PaymentGUI(payment);
         });
     }
 
