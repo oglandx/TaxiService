@@ -6,11 +6,12 @@ import javax.swing.*;
  * Created by oglandx on 6/13/16.
  */
 public class GUIMain extends JFrame {
-    private String title = "Служба заказа такси";
+    private String title = "Taxi ordering service";
 
     private JPanel panel;
     private JButton signInButton;
     private JButton signUpButton;
+
 
     public GUIMain() {
         setContentPane(panel);
@@ -22,11 +23,15 @@ public class GUIMain extends JFrame {
         setVisible(true);
 
         signInButton.addActionListener(e -> {
-
+            setVisible(false);
+            dispose();
+            new Login();
         });
 
         signUpButton.addActionListener(e -> {
-
+            setVisible(false);
+            dispose();
+            new Registration();
         });
     }
 }
