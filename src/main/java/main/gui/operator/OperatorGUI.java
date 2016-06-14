@@ -191,5 +191,7 @@ public class OperatorGUI extends JFrame {
                         "Error!", JOptionPane.ERROR_MESSAGE);
             }
         }
+        reloadDriverList();
+        reloadOrderList();
     }
 }
