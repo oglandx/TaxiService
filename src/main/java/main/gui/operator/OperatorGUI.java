@@ -41,6 +41,7 @@ public class OperatorGUI extends JFrame {
     private JButton acceptFoundDriverButton;
     private JList<Driver> freeDriversList;
     private JButton updateListsButton;
+    private JButton killOrderButton;
 
 
     public OperatorGUI(OperatorFacade facade, Operator operator) {
@@ -75,6 +76,7 @@ public class OperatorGUI extends JFrame {
             driverField.setText("");
             findOptimalDriverButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DECLINED));
             acceptFoundDriverButton.setEnabled(false);
+            killOrderButton.setEnabled(order != null && order.getStatus().eq(OrderStatus.DECLINED));
         });
 
         freeDriversList.addListSelectionListener(e -> {
@@ -94,6 +96,7 @@ public class OperatorGUI extends JFrame {
         });
 
         acceptFoundDriverButton.addActionListener(this::acceptFoundDriver);
+        killOrderButton.addActionListener(this::killOrder);
     }
 
     private void reloadOrderList() {
@@ -188,6 +191,28 @@ public class OperatorGUI extends JFrame {
             } catch (ApplicationError ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred while accepting driver",
+                        "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        reloadDriverList();
+        reloadOrderList();
+    }
+
+    private void killOrder(ActionEvent e) {
+        Order order = orderList.getSelectedValue();
+        if (order == null || !order.getStatus().eq(OrderStatus.DECLINED)) {
+            JOptionPane.showMessageDialog(null, "Something went wrong",
+                    "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            try {
+                if (!facade.killOrder(operator, order)) {
+                    JOptionPane.showMessageDialog(null, "Cannot kill order",
+                            "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (ApplicationError ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "An error occurred while trying to make order DEAD",
                         "Error!", JOptionPane.ERROR_MESSAGE);
             }
         }

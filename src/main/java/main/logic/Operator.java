@@ -53,4 +53,8 @@ public class Operator extends User implements AbstractOperator {
     public Operator(RegisterData regData){
         register(regData);
     }
+
+    public boolean killOrder(Order order) {
+        return order.setStatus(OrderStatus.DEAD);
+    }
 }

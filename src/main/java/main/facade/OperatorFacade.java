@@ -126,7 +126,7 @@ public class OperatorFacade implements UserFacade<Operator> {
     }
 
     public List<Order> getOrderList() throws ApplicationError {
-        String query = "{'status': '" + OrderStatus.NEW + "'}";
+        String query = "{'status__in': '" + OrderStatus.NEW + "," + OrderStatus.DECLINED + "'}";
         List<Order> orders;
         try {
             orders = orderRepository.filter(new Query(query));
@@ -172,5 +172,18 @@ public class OperatorFacade implements UserFacade<Operator> {
             return true;
         }
         return false;
+    }
+
+    public boolean killOrder(Operator operator, Order order) throws ApplicationError {
+        if (!operator.killOrder(order)) {
+            return false;
+        }
+        try {
+            orderRepository.update(order);
+        }
+        catch (DatabaseException e) {
+            throw new ApplicationError(e);
+        }
+        return true;
     }
 }
