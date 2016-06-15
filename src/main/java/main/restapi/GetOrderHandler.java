@@ -95,7 +95,9 @@ public class GetOrderHandler implements HttpHandler {
     private String getOrdersJson(List<Order> orders) throws UnsupportedEncodingException {
         JSONArray array = new JSONArray();
         for (Order order: orders) {
-            array.put(new JSONObject(order));
+            JSONObject json = new JSONObject(order);
+            json.remove("passenger");
+            array.put(json);
         }
         return array.toString();
     }

@@ -15,7 +15,7 @@ public class Order extends Entity implements AbstractOrder {
     private Timestamp creationTime;
     private Address address = null;
     private Payment payment = null;
-    private Integer rated = -1;
+    private Integer rated = null;
 
     public static final int MIN_RATE = -2;
     public static final int MAX_RATE = 2;
