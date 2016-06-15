@@ -48,7 +48,7 @@ public enum OrderStatus {
                 result = nextState == ACCEPTED || nextState == DECLINED;
                 break;
             case DECLINED:
-                result = nextState == DEAD;
+                result = nextState == DEAD || nextState == PROCESSING;
                 break;
             case ACCEPTED:
                 result = nextState == EXECUTED || nextState == DECLINED;

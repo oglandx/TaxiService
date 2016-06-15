@@ -86,9 +86,12 @@ public class Order extends Entity implements AbstractOrder {
         this.passenger = passenger;
     }
 
-    public void setDriver(Driver driver) {
-        driver.setStatus(DriverStatus.READY);
-        this.driver = driver;
+    public boolean setDriver(Driver driver) {
+        if (driver.setStatus(DriverStatus.READY)) {
+            this.driver = driver;
+            return true;
+        }
+        return false;
     }
 
     public Timestamp getCreationTime() {

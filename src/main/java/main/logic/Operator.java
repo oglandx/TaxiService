@@ -19,9 +19,7 @@ public class Operator extends User implements AbstractOperator {
         if(!this.attached.contains(order) &&
                 (order.getStatus() == OrderStatus.NEW || order.getStatus() == OrderStatus.DECLINED)){
             attached.add(order);
-            order.setStatus(OrderStatus.PROCESSING);
-            order.setDriver(driver);
-            return true;
+            return order.setStatus(OrderStatus.PROCESSING) && order.setDriver(driver);
         }
         return false;
     }
