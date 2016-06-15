@@ -2,10 +2,12 @@ package main.facade;
 
 import main.common.Query;
 import main.database.AddressDataMapper;
+import main.database.DriverDataMapper;
 import main.database.OrderDataMapper;
 import main.database.PassengerDataMapper;
 import main.logic.*;
 import main.repository.AddressRepository;
+import main.repository.DriverRepository;
 import main.repository.OrderRepository;
 import main.repository.PassengerRepository;
 import main.repository.exceptions.DatabaseException;
@@ -22,6 +24,7 @@ public class PassengerFacade implements UserFacade<Passenger> {
     private static PassengerRepository repository = null;
     private static OrderRepository orderRepository = null;
     private static AddressRepository addressRepository = null;
+    private static DriverRepository driverRepository = null;
 
     private PassengerFacade() throws ApplicationError {
         if (repository == null) {
@@ -54,13 +57,24 @@ public class PassengerFacade implements UserFacade<Passenger> {
             }
             addressRepository = new AddressRepository(dataMapper);
         }
+        if(driverRepository == null){
+            DriverDataMapper dataMapper = null;
+            try {
+                dataMapper = new DriverDataMapper();
+            }
+            catch (SQLException e){
+                throw new ApplicationError(e);
+            }
+            driverRepository = new DriverRepository(dataMapper);
+        }
     }
 
     private PassengerFacade(PassengerRepository passengerRepository, OrderRepository orderRepository,
-                         AddressRepository addressRepository) {
+                         AddressRepository addressRepository, DriverRepository driverRepository) {
         repository = passengerRepository;
         PassengerFacade.orderRepository = orderRepository;
         PassengerFacade.addressRepository = addressRepository;
+        PassengerFacade.driverRepository = driverRepository;
     }
 
     public static PassengerFacade getInstance() throws ApplicationError {
@@ -71,9 +85,9 @@ public class PassengerFacade implements UserFacade<Passenger> {
     }
 
     public static PassengerFacade initInstance(PassengerRepository passengerRepository, OrderRepository orderRepository,
-                                              AddressRepository addressRepository) {
+                                              AddressRepository addressRepository, DriverRepository driverRepository) {
         if (instance == null) {
-            instance = new PassengerFacade(passengerRepository, orderRepository, addressRepository);
+            instance = new PassengerFacade(passengerRepository, orderRepository, addressRepository, driverRepository);
         }
         return instance;
     }
@@ -177,6 +191,26 @@ public class PassengerFacade implements UserFacade<Passenger> {
             orderRepository.update(order);
         }
         catch (DatabaseException e){
+            throw new ApplicationError(e);
+        }
+        return true;
+    }
+
+    public boolean isOrderRated(Order order) {
+        return order.isRated();
+    }
+
+    public boolean rateOrder(Order order, int rate) throws ApplicationError {
+        if (!order.rate(rate)) {
+            return false;
+        }
+        Driver driver = order.getDriver();
+        driver.incKarma(rate);
+        try {
+            orderRepository.update(order);
+            driverRepository.update(driver);
+        }
+        catch (DatabaseException e) {
             throw new ApplicationError(e);
         }
         return true;

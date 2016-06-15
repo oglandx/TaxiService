@@ -131,6 +131,6 @@ public class Driver extends UserWithKarma implements AbstractDriver {
 
     @Override
     public String toString() {
-        return "Driver: " + getLastname() + " " + getFirstname() + " " + getMiddlename();
+        return getLastname() + " " + getFirstname() + " " + getMiddlename();
     }
 }

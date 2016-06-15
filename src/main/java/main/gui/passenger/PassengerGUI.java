@@ -30,6 +30,8 @@ public class PassengerGUI extends JFrame {
     private JButton showPaymentButton;
     private JTextField driverField;
     private JTextField statusField;
+    private JButton rateOrderButton;
+    private JTextField ratingField;
 
     private PassengerFacade facade;
     private Passenger passenger;
@@ -57,6 +59,8 @@ public class PassengerGUI extends JFrame {
                 buildingField.setText("");
                 orderField.setText("");
                 statusField.setText("");
+                driverField.setText("");
+                ratingField.setText("");
             }
             else {
                 cityField.setText(order.getAddress().getCity());
@@ -64,9 +68,13 @@ public class PassengerGUI extends JFrame {
                 buildingField.setText(order.getAddress().getBuilding());
                 orderField.setText(order.toString());
                 statusField.setText(order.getStatus().getId());
+                driverField.setText(order.getDriver() == null ? "" : order.getDriver().toString());
+                ratingField.setText(order.isRated() ? String.valueOf(order.getRating() + 3) : "");
             }
-            killOrderButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DEAD));
+            killOrderButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DEAD) &&
+                    !order.getStatus().eq(OrderStatus.EXECUTED));
             showPaymentButton.setEnabled(order != null && order.getPayment() != null);
+            rateOrderButton.setEnabled(order != null && order.getPayment() != null && !order.isRated());
         });
 
         killOrderButton.addActionListener(e -> {
@@ -95,6 +103,17 @@ public class PassengerGUI extends JFrame {
                 new PaymentGUI(order.getPayment());
             }
         });
+
+        rateOrderButton.addActionListener(e -> {
+            Order order = orderList.getSelectedValue();
+            if (order == null) {
+                JOptionPane.showMessageDialog(null, "Something went wrong",
+                        "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                new RatingGUI(facade, order);
+            }
+        });
     }
 
     private void reloadOrderList() {
@@ -118,7 +137,7 @@ public class PassengerGUI extends JFrame {
 
     private void killOrder() {
         String orderType = ((String)orderTypeComboBox.getSelectedItem()).toUpperCase();
-        if (!orderType.equals("DEAD") &&
+        if (!orderType.equals("DEAD") && !orderType.equals("EXECUTED") &&
                 JOptionPane.showConfirmDialog(null, "Are you sure you want to decline this order?",
                 "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             Order order = orderList.getSelectedValue();

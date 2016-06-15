@@ -7,13 +7,13 @@ public class UserWithKarma extends User implements AbstractUserWithKarma {
     private int karma;
 
     @Override
-    public int incKarma() {
-        return ++karma;
+    public int incKarma(int i) {
+        return karma += i;
     }
 
     @Override
-    public int decKarma() {
-        return --karma;
+    public int decKarma(int i) {
+        return karma += i;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class UserWithKarma extends User implements AbstractUserWithKarma {
         return karma;
     }
 
-    protected void setKarma(int karma) {
+    public void setKarma(int karma) {
         this.karma = karma;
     }
 

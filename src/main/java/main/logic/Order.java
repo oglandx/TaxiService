@@ -1,7 +1,6 @@
 package main.logic;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,6 +15,10 @@ public class Order extends Entity implements AbstractOrder {
     private Timestamp creationTime;
     private Address address = null;
     private Payment payment = null;
+    private Integer rated = -1;
+
+    public static final int MIN_RATE = -2;
+    public static final int MAX_RATE = 2;
 
     public Order(Address address){
         creationTime = new Timestamp(new Date().getTime());
@@ -23,7 +26,7 @@ public class Order extends Entity implements AbstractOrder {
     }
 
     public Order(int id, Timestamp creationTime, String status, Address address,
-                 Payment payment, Driver driver, Passenger passenger){
+                 Payment payment, Driver driver, Passenger passenger, Integer rated){
         setId(id);
         this.creationTime = creationTime;
         setStatus(OrderStatus.valueOf(status), true);
@@ -31,6 +34,7 @@ public class Order extends Entity implements AbstractOrder {
         setPayment(payment);
         assignPassenger(passenger);
         bindDriver(driver);
+        this.rated = rated;
     }
 
     @Override
@@ -120,6 +124,23 @@ public class Order extends Entity implements AbstractOrder {
 
     @Override
     public String toString() {
-        return "Order #" + getId() + " (" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(getCreationTime()) + ")";
+        return "[" + getStatus().getId().charAt(0) + "] Order #" + getId() +
+                " (" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(getCreationTime()) + ")";
+    }
+
+    public boolean isRated() {
+        return rated != null && rated >= MIN_RATE && rated <= MAX_RATE;
+    }
+
+    public boolean rate(int rate) {
+        if (!isRated()) {
+            this.rated = rate;
+            return true;
+        }
+        return false;
+    }
+
+    public Integer getRating(){
+        return rated;
     }
 }

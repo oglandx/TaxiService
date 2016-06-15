@@ -73,7 +73,7 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
         String sql =
                 "UPDATE \"User\" " +
                         "SET lastname = ?, firstname = ?, middlename = ?, birthdate = ?, email = ?, pass = ?, " +
-                        "karma = ? WHERE id = ?; ";
+                        "karma = ? WHERE id in (SELECT user_id FROM \"" + getTableName() + "\" WHERE id = ?);";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setString(1, item.getRegData().getLastName());
         prepared.setString(2, item.getRegData().getFirstName());

@@ -5,7 +5,6 @@ import main.common.Query;
 import main.logic.Driver;
 
 import java.sql.*;
-import java.util.List;
 
 /**
  * Created by oglandx on 5/30/16.
@@ -28,6 +27,8 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
                 -1 : resultSet.getInt("driver_id");
         int passenger_id = resultSet.getObject("passenger_id") == null ?
                 -1 : resultSet.getInt("passenger_id");
+        Integer rated = resultSet.getObject("rated") == null ?
+                null : resultSet.getInt("rated");
 
         Address address = new AddressDataMapper().get(new Query("{'id':'" + address_id + "'}"));
         Payment payment = payment_id < 0 ? null :
@@ -37,7 +38,7 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
         Passenger passenger = passenger_id < 0 ? null :
                 new PassengerDataMapper().get(new Query("{'id': '" + passenger_id + "'}"));
 
-        return new Order(id, creationtime, status, address, payment, driver, passenger);
+        return new Order(id, creationtime, status, address, payment, driver, passenger, rated);
     }
 
     @Override
@@ -48,7 +49,8 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
     @Override
     public void insert(Order item) throws SQLException {
         String sql = "INSERT INTO \"" + getTableName() +
-                "\" (creationtime, status, address_id, payment_id, passenger_id, driver_id) VALUES (?, ?, ?, ?, ?, ?);";
+                "\" (creationtime, status, address_id, payment_id, passenger_id, driver_id, rated) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setTimestamp(1, item.getCreationTime());
         prepared.setString(2, item.getStatus().getId());
@@ -72,6 +74,13 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
         }
         else {
             prepared.setNull(6, Types.INTEGER);
+        }
+
+        if(item.isRated()) {
+            prepared.setInt(7, item.getRating());
+        }
+        else {
+            prepared.setNull(7, Types.INTEGER);
         }
 
         prepared.execute();
@@ -80,7 +89,8 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
     @Override
     public void update(Order item) throws SQLException {
         String sql = "UPDATE \"" + getTableName() +
-                "\" SET creationtime=?, status=?, address_id=?, payment_id=?, passenger_id=?, driver_id=? WHERE id = ?;";
+                "\" SET creationtime=?, status=?, address_id=?, payment_id=?, passenger_id=?, driver_id=?, rated=? " +
+                "WHERE id = ?;";
         PreparedStatement prepared = getConnection().prepareStatement(sql);
         prepared.setTimestamp(1, item.getCreationTime());
         prepared.setString(2, item.getStatus().getId());
@@ -105,7 +115,15 @@ public class OrderDataMapper extends SimpleTableDataMapper<Order>{
         else {
             prepared.setNull(6, Types.INTEGER);
         }
-        prepared.setInt(7, item.getId());
+
+        if(item.isRated()) {
+            prepared.setInt(7, item.getRating());
+        }
+        else {
+            prepared.setNull(7, Types.INTEGER);
+        }
+
+        prepared.setInt(8, item.getId());
 
         prepared.execute();
     }

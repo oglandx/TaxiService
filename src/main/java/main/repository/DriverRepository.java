@@ -14,7 +14,10 @@ public class DriverRepository extends Repository<Driver> {
         updateDb(item);
         list.stream()
                 .filter(entry -> entry.getId() == item.getId())
-                .forEach(entry -> entry.register(item.getRegData()));
+                .forEach(entry -> {
+                    entry.register(item.getRegData());
+                    entry.setKarma(item.getKarma());
+                });
     }
 
     public DriverRepository(DriverDataMapper dataMapper){

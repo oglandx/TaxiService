@@ -96,9 +96,12 @@ public class ApplicationFacade {
             paymentRepository = new PaymentRepository(dataMapper);
         }
 
-        passengerFacade = PassengerFacade.initInstance(passengerRepository, orderRepository, addressRepository);
-        driverFacade = DriverFacade.initInstance(driverRepository, orderRepository, rateRepository, paymentRepository);
-        operatorFacade = OperatorFacade.initInstance(operatorRepository, driverRepository, orderRepository);
+        passengerFacade = PassengerFacade.initInstance(
+                passengerRepository, orderRepository, addressRepository, driverRepository);
+        driverFacade = DriverFacade.initInstance(
+                driverRepository, orderRepository, rateRepository, paymentRepository);
+        operatorFacade = OperatorFacade.initInstance(
+                operatorRepository, driverRepository, orderRepository);
     }
 
     public static ApplicationFacade getInstance() throws ApplicationError {
