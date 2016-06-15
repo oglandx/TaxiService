@@ -154,10 +154,7 @@ public class DriverFacade implements UserFacade<Driver> {
     }
 
     public boolean selectOrder(Driver driver, Order order) throws ApplicationError {
-        boolean res = driver.selectOrder(order);
-        if (!driver.selectOrder(order)) {
-            return false;
-        }
+        boolean result = driver.selectOrder(order);
         try {
             orderRepository.update(order);
             repository.update(driver);
@@ -165,7 +162,7 @@ public class DriverFacade implements UserFacade<Driver> {
         catch (DatabaseException e){
             throw new ApplicationError(e);
         }
-        return true;
+        return result;
     }
 
     public boolean declineOrder(Driver driver, Order order) throws ApplicationError {

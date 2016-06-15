@@ -100,12 +100,8 @@ public class DriverGUI extends JFrame {
                         facade.declineOrder(driver, order);
                     }
                 }
-                if (facade.selectOrder(driver, selectedOrder)) {
+                if (!facade.selectOrder(driver, selectedOrder)) {
                     JOptionPane.showMessageDialog(null, "Cannot select the order for current driver",
-                            "Error!", JOptionPane.ERROR_MESSAGE);
-                }
-                if (facade.setStatus(driver, DriverStatus.BUSY)) {
-                    JOptionPane.showMessageDialog(null, "Cannot set driver status",
                             "Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (ApplicationError ex) {
