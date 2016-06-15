@@ -154,6 +154,7 @@ public class DriverFacade implements UserFacade<Driver> {
     }
 
     public boolean selectOrder(Driver driver, Order order) throws ApplicationError {
+        boolean res = driver.selectOrder(order);
         if (!driver.selectOrder(order)) {
             return false;
         }
@@ -221,8 +222,11 @@ public class DriverFacade implements UserFacade<Driver> {
     public Payment getPayment(Driver driver, int distance) throws ApplicationError {
         Payment payment = driver.getPayment(distance);
         if (payment != null) {
+            Query query = new Query("{'distance': '" + payment.getDistance() +
+                    "', 'waitmin': '" + payment.getWaitMin() + "', 'rate_id': '" + payment.getRate().getId() + "'}");
             try {
                 paymentRepository.create(payment);
+                driver.getSelectedOrder().setPayment(paymentRepository.filter(query).get(0));
                 orderRepository.update(driver.getSelectedOrder());
             }
             catch (DatabaseException e){
@@ -264,5 +268,19 @@ public class DriverFacade implements UserFacade<Driver> {
             throw new ApplicationError(e);
         }
         return order;
+    }
+
+    public boolean closeOrder(Driver driver) throws ApplicationError {
+        if (!driver.closeOrder()) {
+            return false;
+        }
+        try {
+            orderRepository.update(driver.getSelectedOrder());
+            repository.update(driver);
+        }
+        catch (DatabaseException e) {
+            throw new ApplicationError(e);
+        }
+        return true;
     }
 }

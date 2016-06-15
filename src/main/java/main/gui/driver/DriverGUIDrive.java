@@ -32,10 +32,13 @@ public class DriverGUIDrive extends JFrame {
     private JButton startWaitingButton;
     private JButton showPaymentButton;
     private JSpinner distanceSpinner;
+    private JButton closeOrderButton;
+    private JTextField passengerField;
 
     public DriverGUIDrive(DriverFacade facade, Driver driver, Order order) {
         this.facade = facade;
         this.driver = driver;
+        driver.selectOrder(order, true);
 
         setContentPane(panel);
         setSize(550, 300);
@@ -50,9 +53,25 @@ public class DriverGUIDrive extends JFrame {
         buildingField.setText(order.getAddress().getBuilding());
         orderField.setText(order.toString());
         statusField.setText(order.getStatus().getId());
+        passengerField.setText(order.getPassenger().toString());
+
+        if (order.getPayment() != null) {
+            payment = order.getPayment();
+            startWaitingButton.setEnabled(false);
+            stopWaitingButton.setEnabled(false);
+            leaveWaitingButton.setEnabled(false);
+            distanceSpinner.setEnabled(false);
+            distanceSpinner.setValue(payment.getDistance());
+            showPaymentButton.setEnabled(true);
+            closeOrderButton.setEnabled(true);
+        }
 
         startWaitingButton.addActionListener(e -> {
-            facade.startWaiting(driver);
+            if (!facade.startWaiting(driver)) {
+                JOptionPane.showMessageDialog(null, "Cannot start waiting",
+                        "Error!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             startWaitingButton.setEnabled(false);
             stopWaitingButton.setEnabled(true);
             leaveWaitingButton.setEnabled(true);
@@ -72,15 +91,15 @@ public class DriverGUIDrive extends JFrame {
         leaveWaitingButton.addActionListener(e -> {
             try {
                 facade.leaveWaiting(driver);
+                setVisible(false);
+                dispose();
+                new DriverGUI(facade, driver);
             }
             catch (ApplicationError ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred while trying to decline order",
                         "Error!", JOptionPane.ERROR_MESSAGE);
             }
-            setVisible(false);
-            dispose();
-            new DriverGUI(facade, driver);
         });
 
         showPaymentButton.addActionListener(e -> {
@@ -101,8 +120,26 @@ public class DriverGUIDrive extends JFrame {
                             "Error!", JOptionPane.ERROR_MESSAGE);
                 }
                 distanceSpinner.setEnabled(false);
+                closeOrderButton.setEnabled(true);
             }
             new PaymentGUI(payment);
+        });
+
+        closeOrderButton.addActionListener(e -> {
+            try {
+                if (!facade.closeOrder(driver)) {
+                    JOptionPane.showMessageDialog(null, "Cannot close order. Order is absent or have bad status.",
+                            "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+                setVisible(false);
+                dispose();
+                new DriverGUI(facade, driver);
+            }
+            catch (ApplicationError ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "An error occurred while closing the order",
+                        "Error!", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 

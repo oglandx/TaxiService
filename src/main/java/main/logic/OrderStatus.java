@@ -54,6 +54,7 @@ public enum OrderStatus {
                 result = nextState == EXECUTED || nextState == DECLINED;
                 break;
             case EXECUTED:
+                result = nextState == EXECUTED;
                 break;
         }
         return result;

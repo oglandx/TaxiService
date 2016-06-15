@@ -22,4 +22,9 @@ public class Passenger extends UserWithKarma {
     public boolean declineOrder(Order order) {
         return order.getPassenger().getId() == getId() && order.setStatus(OrderStatus.DECLINED);
     }
+
+    @Override
+    public String toString() {
+        return getLastname() + " " + getFirstname() + " " + getMiddlename();
+    }
 }

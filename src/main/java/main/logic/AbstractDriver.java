@@ -16,4 +16,5 @@ public interface AbstractDriver {
     Payment getPayment(int distance);
     Rate getCurrentRate();
     void setCurrentRate(Rate rate);
+    boolean closeOrder();
 }

@@ -19,6 +19,9 @@ public enum DriverStatus {
     }
 
     static boolean isAvailable(final DriverStatus previousState, final DriverStatus nextState){
+        if (previousState == null) {
+            return true;
+        }
         boolean result = false;
         switch (previousState){
             case FREE:
