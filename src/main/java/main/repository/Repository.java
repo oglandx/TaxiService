@@ -43,9 +43,15 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
 
     @Override
     public T get(Query query) throws DatabaseException, MultipleObjectsException, ObjectNotFoundException {
-        List<T> result = list.stream()
-                .filter(query::check)
-                .collect(Collectors.toList());
+        return get(query, false);
+    }
+
+    public T get(Query query, boolean forceDb)
+            throws DatabaseException, MultipleObjectsException, ObjectNotFoundException {
+        List<T> result = forceDb ? new ArrayList<>() :
+                list.stream()
+                        .filter(query::check)
+                        .collect(Collectors.toList());
         if(result.size() > 1){
             throw new MultipleObjectsException();
         }

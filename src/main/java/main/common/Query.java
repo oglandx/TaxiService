@@ -99,7 +99,7 @@ public class Query {
                         .getClass()
                         .getMethod(methodName);
 
-                final String value = (String) method.invoke(entry);
+                final String value = String.valueOf(method.invoke(entry));
                 final String qValue = query.getString(name);
 
                 switch (func){

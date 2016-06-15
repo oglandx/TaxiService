@@ -280,4 +280,16 @@ public class DriverFacade implements UserFacade<Driver> {
         }
         return true;
     }
+
+    public Driver refreshDriver(Driver driver) throws ApplicationError {
+        Query query = new Query("{'id': '" + driver.getId() + "'}");
+        Driver driverInDb;
+        try {
+            driverInDb = repository.get(query, true);
+        }
+        catch (DatabaseException | MultipleObjectsException | ObjectNotFoundException e){
+            throw new ApplicationError(e);
+        }
+        return driverInDb;
+    }
 }

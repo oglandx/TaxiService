@@ -75,6 +75,14 @@ public class DriverGUI extends JFrame {
 
     private void reloadOrderList() {
         try {
+            driver = facade.refreshDriver(driver);
+        }
+        catch (ApplicationError ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred while trying to refresh driver",
+                    "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+        try {
             final DefaultListModel<Order> orderListModel = new DefaultListModel<>();
             fullOrderList = facade.getOrderList(driver);
             orderList.setModel(orderListModel);
@@ -104,7 +112,8 @@ public class DriverGUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Cannot select the order for current driver",
                             "Error!", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (ApplicationError ex) {
+            }
+            catch (ApplicationError ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred while trying to accept order and decline others",
                         "Error!", JOptionPane.ERROR_MESSAGE);
