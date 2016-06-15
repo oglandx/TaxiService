@@ -208,6 +208,7 @@ public class DriverFacade implements UserFacade<Driver> {
         if (driver.leaveWaiting()) {
             try {
                 orderRepository.update(driver.getSelectedOrder());
+                repository.update(driver);
             } catch (DatabaseException e) {
                 throw new ApplicationError(e);
             }
