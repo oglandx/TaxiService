@@ -19,8 +19,8 @@ public class Passenger extends UserWithKarma {
         return order.getStatus().eq(OrderStatus.NEW) && order.assignPassenger(this);
     }
 
-    public boolean declineOrder(Order order) {
-        return order.getPassenger().getId() == getId() && order.setStatus(OrderStatus.DECLINED);
+    public boolean killOrder(Order order) {
+        return order.getPassenger().getId() == getId() && order.setStatus(OrderStatus.DEAD);
     }
 
     @Override

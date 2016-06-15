@@ -42,7 +42,7 @@ public enum OrderStatus {
         boolean result = false;
         switch (previousState){
             case NEW:
-                result = nextState == PROCESSING || nextState == DECLINED;
+                result = nextState == PROCESSING || nextState == DEAD;
                 break;
             case PROCESSING:
                 result = nextState == ACCEPTED || nextState == DECLINED;

@@ -169,8 +169,8 @@ public class PassengerFacade implements UserFacade<Passenger> {
         return orders;
     }
 
-    public boolean declineOrder(Passenger passenger, Order order) throws ApplicationError {
-        if (!passenger.declineOrder(order)) {
+    public boolean killOrder(Passenger passenger, Order order) throws ApplicationError {
+        if (!passenger.killOrder(order)) {
             return false;
         }
         try {

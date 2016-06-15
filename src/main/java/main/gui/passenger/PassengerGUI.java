@@ -22,7 +22,7 @@ public class PassengerGUI extends JFrame {
     private JList<Order> orderList;
     private JComboBox orderTypeComboBox;
     private JTextField orderField;
-    private JButton declineOrderButton;
+    private JButton killOrderButton;
     private JTextField cityField;
     private JTextField streetField;
     private JTextField buildingField;
@@ -65,12 +65,12 @@ public class PassengerGUI extends JFrame {
                 orderField.setText(order.toString());
                 statusField.setText(order.getStatus().getId());
             }
-            declineOrderButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DECLINED));
+            killOrderButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DEAD));
             showPaymentButton.setEnabled(order != null && order.getPayment() != null);
         });
 
-        declineOrderButton.addActionListener(e -> {
-            declineOrder();
+        killOrderButton.addActionListener(e -> {
+            killOrder();
         });
 
         createNewOrderButton.addActionListener(e -> {
@@ -116,9 +116,9 @@ public class PassengerGUI extends JFrame {
         }
     }
 
-    private void declineOrder() {
+    private void killOrder() {
         String orderType = ((String)orderTypeComboBox.getSelectedItem()).toUpperCase();
-        if (!orderType.equals("DECLINED") &&
+        if (!orderType.equals("DEAD") &&
                 JOptionPane.showConfirmDialog(null, "Are you sure you want to decline this order?",
                 "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             Order order = orderList.getSelectedValue();
@@ -127,7 +127,7 @@ public class PassengerGUI extends JFrame {
                         "Error!", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
-                    facade.declineOrder(passenger, order);
+                    facade.killOrder(passenger, order);
                 } catch (ApplicationError ex) {
                     JOptionPane.showMessageDialog(null, "An error occurred while trying to decline the order",
                             "Error!", JOptionPane.ERROR_MESSAGE);
