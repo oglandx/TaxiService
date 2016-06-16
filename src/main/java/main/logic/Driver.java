@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class Driver extends UserWithKarma implements AbstractDriver {
     private Order selectedOrder = null;
-    private DriverStatus status = null;
+    private DriverStatus status = DriverStatus.FREE;
     private Date waitingStart = null;
     private int waitedTime = 0;
     private Rate currentRate = null;
@@ -52,6 +52,7 @@ public class Driver extends UserWithKarma implements AbstractDriver {
     public boolean declineOrder(Order order) {
         selectedOrder = null;
         return order.getDriver().getId() == getId() &&
+                setStatus(DriverStatus.FREE) &&
                 order.bindDriver(this) &&
                 order.setStatus(OrderStatus.DECLINED);
     }
@@ -86,6 +87,9 @@ public class Driver extends UserWithKarma implements AbstractDriver {
 
     @Override
     public int endWaiting() {
+        if (waitingStart == null) {
+            return -1;
+        }
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
         waitedTime = (int)(currentTime.getTime() - waitingStart.getTime());
@@ -95,9 +99,11 @@ public class Driver extends UserWithKarma implements AbstractDriver {
 
     @Override
     public boolean leaveWaiting() {
-        waitingStart = null;
         waitedTime = 0;
-        return selectedOrder != null && setStatus(DriverStatus.FREE) && selectedOrder.setStatus(OrderStatus.DECLINED);
+        boolean started = waitingStart != null;
+        waitingStart = null;
+        return selectedOrder != null && started &&
+                setStatus(DriverStatus.FREE) && selectedOrder.setStatus(OrderStatus.DECLINED);
     }
 
     @Override

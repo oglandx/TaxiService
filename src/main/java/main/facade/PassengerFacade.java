@@ -201,10 +201,13 @@ public class PassengerFacade implements UserFacade<Passenger> {
     }
 
     public boolean rateOrder(Order order, int rate) throws ApplicationError {
-        if (!order.rate(rate)) {
+        if (order == null) {
             return false;
         }
         Driver driver = order.getDriver();
+        if (driver == null || !order.rate(rate)) {
+            return false;
+        }
         driver.incKarma(rate);
         try {
             orderRepository.update(order);

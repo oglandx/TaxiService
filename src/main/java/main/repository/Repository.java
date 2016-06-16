@@ -49,6 +49,7 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
 
     public T get(Query query, boolean forceDb)
             throws DatabaseException, MultipleObjectsException, ObjectNotFoundException {
+        forceDb = true;
         List<T> result = forceDb ? new ArrayList<>() :
                 list.stream()
                         .filter(query::check)

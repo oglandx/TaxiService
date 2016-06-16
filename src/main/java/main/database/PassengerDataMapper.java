@@ -39,6 +39,13 @@ public class PassengerDataMapper extends UserDataMapper<Passenger> {
         String pass = resultSet.getString("pass");
         int karma = resultSet.getInt("karma");
 
+        String sql = "SELECT * FROM \"" + getTableName() + "\" WHERE user_id = " + id + ";";
+        resultSet = getConnection().createStatement().executeQuery(sql);
+        if (!resultSet.next()) {
+            throw new SQLException();
+        }
+        id = resultSet.getInt("id");
+
         return new Passenger(id, new RegisterData(lastname, firstname, middlename, birthdate, email, pass), karma);
     }
 

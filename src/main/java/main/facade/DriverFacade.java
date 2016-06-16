@@ -218,6 +218,9 @@ public class DriverFacade implements UserFacade<Driver> {
     }
 
     public Payment getPayment(Driver driver, int distance) throws ApplicationError {
+        if (driver.getCurrentRate() == null) {
+            return null;
+        }
         Payment payment = driver.getPayment(distance);
         if (payment != null) {
             Query query = new Query("{'distance': '" + payment.getDistance() +
