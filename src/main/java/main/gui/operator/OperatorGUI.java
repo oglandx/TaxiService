@@ -74,9 +74,9 @@ public class OperatorGUI extends JFrame {
                 statusField.setText(order.getStatus().getId());
             }
             driverField.setText("");
-            findOptimalDriverButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DECLINED));
+            findOptimalDriverButton.setEnabled(facade.canFindOptimalDriver(order));
             acceptFoundDriverButton.setEnabled(false);
-            killOrderButton.setEnabled(order != null && order.getStatus().eq(OrderStatus.DECLINED));
+            killOrderButton.setEnabled(facade.canKillOrder(order));
         });
 
         freeDriversList.addListSelectionListener(e -> {

@@ -24,7 +24,7 @@ public class RatingGUI extends JFrame {
     private JButton cancelButton;
 
     public RatingGUI(PassengerFacade facade, Order order) {
-        if (order == null || order.isRated() || order.getDriver() == null) {
+        if (facade.isWrongOrderToRate(order)) {
             JOptionPane.showMessageDialog(null, "Wrong order to rate", "Error!", JOptionPane.ERROR_MESSAGE);
             dispose();
             return;

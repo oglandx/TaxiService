@@ -101,7 +101,7 @@ public class ApplicationFacade {
         driverFacade = DriverFacade.initInstance(
                 driverRepository, orderRepository, rateRepository, paymentRepository);
         operatorFacade = OperatorFacade.initInstance(
-                operatorRepository, driverRepository, orderRepository);
+                operatorRepository, driverRepository, orderRepository, rateRepository);
     }
 
     public static ApplicationFacade getInstance() throws ApplicationError {

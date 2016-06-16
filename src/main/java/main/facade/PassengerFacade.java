@@ -218,4 +218,29 @@ public class PassengerFacade implements UserFacade<Passenger> {
         }
         return true;
     }
+
+    public boolean canRateOrder(Order order) {
+        return order != null && order.getPayment() != null && !order.isRated();
+    }
+
+    public boolean canShowPayment(Order order) {
+        return order != null && order.getPayment() != null;
+    }
+
+    public boolean canKillOrder(Order order) {
+        return order != null && !order.getStatus().eq(OrderStatus.DEAD) &&
+                !order.getStatus().eq(OrderStatus.EXECUTED);
+    }
+
+    public String getGUIRating(Order order) {
+        return order.isRated() ? String.valueOf(order.getRating() + 3) : "";
+    }
+
+    public String getDriverName(Order order) {
+        return order.getDriver() == null ? "" : order.getDriver().toString();
+    }
+
+    public boolean isWrongOrderToRate(Order order) {
+        return order == null || order.isRated() || order.getDriver() == null;
+    }
 }

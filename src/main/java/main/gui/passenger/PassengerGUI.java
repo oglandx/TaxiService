@@ -68,13 +68,12 @@ public class PassengerGUI extends JFrame {
                 buildingField.setText(order.getAddress().getBuilding());
                 orderField.setText(order.toString());
                 statusField.setText(order.getStatus().getId());
-                driverField.setText(order.getDriver() == null ? "" : order.getDriver().toString());
-                ratingField.setText(order.isRated() ? String.valueOf(order.getRating() + 3) : "");
+                driverField.setText(facade.getDriverName(order));
+                ratingField.setText(facade.getGUIRating(order));
             }
-            killOrderButton.setEnabled(order != null && !order.getStatus().eq(OrderStatus.DEAD) &&
-                    !order.getStatus().eq(OrderStatus.EXECUTED));
-            showPaymentButton.setEnabled(order != null && order.getPayment() != null);
-            rateOrderButton.setEnabled(order != null && order.getPayment() != null && !order.isRated());
+            killOrderButton.setEnabled(facade.canKillOrder(order));
+            showPaymentButton.setEnabled(facade.canShowPayment(order));
+            rateOrderButton.setEnabled(facade.canRateOrder(order));
         });
 
         killOrderButton.addActionListener(e -> {
@@ -99,7 +98,7 @@ public class PassengerGUI extends JFrame {
 
         showPaymentButton.addActionListener(e -> {
             Order order = orderList.getSelectedValue();
-            if (order != null && order.getPayment() != null) {
+            if (facade.canRateOrder(order)) {
                 new PaymentGUI(order.getPayment());
             }
         });

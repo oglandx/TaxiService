@@ -37,6 +37,11 @@ public class Payment extends Entity {
         this.waitMin = waitMin;
     }
 
+    private int prepareWaitMin() {
+        int mins = waitMin - getRate().getFreeMinutes();
+        return this.waitMin = mins > 0 ? mins : 0;
+    }
+
     public int getWaitMin(){
         return this.waitMin;
     }

@@ -4,10 +4,12 @@ import main.common.Query;
 import main.database.DriverDataMapper;
 import main.database.OperatorDataMapper;
 import main.database.OrderDataMapper;
+import main.database.RateDataMapper;
 import main.logic.*;
 import main.repository.DriverRepository;
 import main.repository.OperatorRepository;
 import main.repository.OrderRepository;
+import main.repository.RateRepository;
 import main.repository.exceptions.DatabaseException;
 
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ public class OperatorFacade implements UserFacade<Operator> {
     private static OperatorRepository repository = null;
     private static OrderRepository orderRepository = null;
     private static DriverRepository driverRepository = null;
+    private static RateRepository rateRepository = null;
 
     private OperatorFacade() throws ApplicationError {
         if (repository == null) {
@@ -54,13 +57,24 @@ public class OperatorFacade implements UserFacade<Operator> {
             }
             driverRepository = new DriverRepository(dataMapper);
         }
+        if(rateRepository == null){
+            RateDataMapper dataMapper = null;
+            try {
+                dataMapper = new RateDataMapper();
+            }
+            catch (SQLException e){
+                throw new ApplicationError(e);
+            }
+            rateRepository = new RateRepository(dataMapper);
+        }
     }
 
     private OperatorFacade(OperatorRepository operatorRepository, DriverRepository driverRepository,
-                         OrderRepository orderRepository) {
+                         OrderRepository orderRepository, RateRepository rateRepository) {
         repository = operatorRepository;
         OperatorFacade.driverRepository = driverRepository;
         OperatorFacade.orderRepository = orderRepository;
+        OperatorFacade.rateRepository = rateRepository;
     }
 
     public static OperatorFacade getInstance() throws ApplicationError{
@@ -70,10 +84,10 @@ public class OperatorFacade implements UserFacade<Operator> {
         return instance;
     }
 
-    public static OperatorFacade initInstance(OperatorRepository operatorRepository,
-                                              DriverRepository driverRepository, OrderRepository orderRepository) {
+    public static OperatorFacade initInstance(OperatorRepository operatorRepository, DriverRepository driverRepository,
+                                              OrderRepository orderRepository, RateRepository rateRepository) {
         if (instance == null) {
-            instance = new OperatorFacade(operatorRepository, driverRepository, orderRepository);
+            instance = new OperatorFacade(operatorRepository, driverRepository, orderRepository, rateRepository);
         }
         return instance;
     }
@@ -180,6 +194,27 @@ public class OperatorFacade implements UserFacade<Operator> {
         }
         try {
             orderRepository.update(order);
+        }
+        catch (DatabaseException e) {
+            throw new ApplicationError(e);
+        }
+        return true;
+    }
+
+    public boolean canFindOptimalDriver(Order order) {
+        return order != null && !order.getStatus().eq(OrderStatus.DECLINED);
+    }
+
+    public boolean canKillOrder(Order order) {
+        return order != null && order.getStatus().eq(OrderStatus.DECLINED);
+    }
+
+    public boolean addRate(Rate rate) throws ApplicationError {
+        if (rate == null) {
+            return false;
+        }
+        try {
+            rateRepository.create(rate);
         }
         catch (DatabaseException e) {
             throw new ApplicationError(e);

@@ -111,12 +111,14 @@ public class DriverGUI extends JFrame {
                 if (!facade.selectOrder(driver, selectedOrder)) {
                     JOptionPane.showMessageDialog(null, "Cannot select the order for current driver",
                             "Error!", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
             catch (ApplicationError ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred while trying to accept order and decline others",
                         "Error!", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             setVisible(false);
             dispose();
