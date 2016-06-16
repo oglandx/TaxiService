@@ -2,6 +2,7 @@ package main.repository;
 
 import main.common.Query;
 import main.database.AbstractDataMapper;
+import main.database.exceptions.SQLMultipleObjectsException;
 import main.database.exceptions.SQLObjectNotFoundException;
 import main.logic.Entity;
 import main.repository.exceptions.DatabaseException;
@@ -60,9 +61,14 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
                 try {
                     result.add(getDataMapper().get(query));
                     list.add(result.get(0));
-                } catch (SQLObjectNotFoundException e) {
+                }
+                catch (SQLObjectNotFoundException e) {
                     throw new ObjectNotFoundException(e);
-                } catch (SQLException e) {
+                }
+                catch (SQLMultipleObjectsException e) {
+                    throw new MultipleObjectsException(e);
+                }
+                catch (SQLException e) {
                     throw new DatabaseException(e);
                 }
             }
@@ -95,6 +101,7 @@ public abstract class Repository<T extends Entity> implements AbstractRepository
             } catch (SQLException e) {
                 throw new DatabaseException(e);
             }
+            return true;
         }
         return list.removeIf(query::check);
     }

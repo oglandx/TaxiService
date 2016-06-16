@@ -100,7 +100,7 @@ public class Query {
                         .getMethod(methodName);
 
                 final String value = String.valueOf(method.invoke(entry));
-                final String qValue = query.getString(name);
+                final String qValue = query.getString(names.getString(i));
 
                 switch (func){
                     case "":
