@@ -42,20 +42,20 @@ public class RepositoryTest {
         passengerRepository.get(query);
     }
 
-    @org.junit.Test
-    public void getTestOne() throws Exception {
-        Query query = new Query("{'id': '" + 0 + "'}");
-        passengerRepository.create(new Passenger(new RegisterData("", "", "", new Date(0), "", "")));
-        assert passengerRepository.get(query) != null;
-    }
-
-    @org.junit.Test (expected = MultipleObjectsException.class)
-    public void getTestMany() throws Exception {
-        Query query = new Query("{'id': '" + 0 + "'}");
-        passengerRepository.create(new Passenger(new RegisterData("", "", "", new Date(0), "", "")));
-        passengerRepository.create(new Passenger(new RegisterData("", "", "", new Date(0), "", "")));
-        passengerRepository.get(query);
-    }
+//    @org.junit.Test
+//    public void getTestOne() throws Exception {
+//        Query query = new Query("{'id': '" + 0 + "'}");
+//        passengerRepository.create(new Passenger(new RegisterData("", "", "", new Date(0), "", "")));
+//        assert passengerRepository.get(query) != null;
+//    }
+//
+//    @org.junit.Test (expected = MultipleObjectsException.class)
+//    public void getTestMany() throws Exception {
+//        Query query = new Query("{'id': '" + 0 + "'}");
+//        passengerRepository.create(new Passenger(new RegisterData("", "", "", new Date(0), "", "")));
+//        passengerRepository.create(new Passenger(new RegisterData("", "", "", new Date(0), "", "")));
+//        passengerRepository.get(query);
+//    }
 
     @org.junit.Test
     public void create() throws Exception {
