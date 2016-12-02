@@ -8,3 +8,6 @@
 4. [Описание вариантов использования](https://github.com/oglandx/TaxiService/wiki/4.-Описание-вариантов-использования)
 5. [Диаграмма классов](https://github.com/oglandx/TaxiService/wiki/5.-Диаграмма-классов)
 6. [Диаграммы последовательностей](https://github.com/oglandx/TaxiService/wiki/6.-Диаграммы-последовательностей)
+
+
+[This is the stable version dated by June, 2016]
